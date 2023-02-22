@@ -50,7 +50,7 @@ private  BCryptPasswordEncoder bCryptPasswordEncoder;
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
        /* http.authorizeRequests().anyRequest().permitAll();
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));*/
-        http.authorizeRequests().antMatchers ( "/login/**").permitAll();
+        http.authorizeRequests().antMatchers ( "/login/**","/user/token/refrech/**").permitAll();
         http.authorizeRequests ().antMatchers (HttpMethod.GET,"/user/**").hasAnyAuthority("ROLE_ADMIN");
        // http.authorizeRequests().antMatchers (HttpMethod.POST, "/user/save/**").hasAnyAuthority ("ROLE_ACHETEUR");
         http.authorizeRequests().anyRequest().authenticated();
