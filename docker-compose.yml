@@ -1,0 +1,36 @@
+version: '3'
+services:
+
+  eureka:
+    build:
+      context: ..\EurekaServer
+      dockerfile: DockerFileEureka
+    container_name: eureka
+    ports:
+      - "8761:8761"
+
+  gateway:
+    build:
+      context: ..\API_Gateway
+      dockerfile: DockerFileGateway
+    container_name: gateway
+    ports:
+      - "8083:8083"
+    depends_on:
+      - eureka
+    environment:
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+      #EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://host.docker.internal:8761/eureka
+      #jdbc:mysql://mysqldb/host.docker.internal/centralachat?autoReconnect=true&useSSL=false
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=centralachat
+    ports:
+      - "3307:3306"
+
