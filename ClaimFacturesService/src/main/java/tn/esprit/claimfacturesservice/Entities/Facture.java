@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -23,8 +24,8 @@ public class Facture implements Serializable {
     private String topicFacture;
     private boolean archive;
     private String reference;
-    private String priceTotal;
-    private LocalDate  datefacture ;
+    private float priceTotal;
+    private Date datefacture ;
     private String devise;
     @JsonIgnore
     @OneToOne

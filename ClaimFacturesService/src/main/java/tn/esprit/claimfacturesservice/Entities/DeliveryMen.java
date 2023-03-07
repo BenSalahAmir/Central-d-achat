@@ -35,5 +35,9 @@ public class DeliveryMen implements Serializable {
     @JsonIgnore
     @ManyToOne
     public Adress adresslivreur ;
+    @JsonIgnore
+
+    @OneToMany
+    public List<Claim> claimList;
 
 }

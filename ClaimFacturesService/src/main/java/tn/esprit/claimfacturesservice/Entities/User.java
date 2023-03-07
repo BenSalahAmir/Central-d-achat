@@ -31,7 +31,8 @@ public class User implements Serializable {
     private Long phone;
     private boolean disponibilite;
     private int age ;
-
+    private  int nbrAvertissment ;
+private  boolean banned;
 
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)

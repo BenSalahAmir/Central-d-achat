@@ -12,8 +12,12 @@ import tn.esprit.claimfacturesservice.Repository.FactureRepository;
 import tn.esprit.claimfacturesservice.Repository.TauxdechangeRepository;
 
 import javax.transaction.Transactional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 @Service
 @Slf4j
@@ -31,13 +35,13 @@ public class FactureServiceImp implements FactureService {
 //        facture.getDelivery().setDeliveryPrice(montantConverti);
         return factureRepo.save(facture);
     }
-    public double convertirMontant(double montant, String deviseDestination) {
-        TauxDEchange tauxDeChange = (TauxDEchange) tauxdechangeRepository.findByDeviseOrigineAndDeviseDestination("DNT", deviseDestination);
-        if (tauxDeChange == null) {
-            throw new IllegalArgumentException("Aucun taux de change n'a été trouvé pour la devise de destination spécifiée.");
-        }
-        return montant * tauxDeChange.getTaux();
-    }
+//    public double convertirMontant(double montant, String deviseDestination) {
+//        TauxDEchange tauxDeChange = (TauxDEchange) tauxdechangeRepository.findByDeviseOrigineAndDeviseDestination("DNT", deviseDestination);
+//        if (tauxDeChange == null) {
+//            throw new IllegalArgumentException("Aucun taux de change n'a été trouvé pour la devise de destination spécifiée.");
+//        }
+//        return montant * tauxDeChange.getTaux();
+//    }
 
 //    public Double convertirMontantd(Double montant, String deviseOrigine, String deviseDestination) {
 //        Devise deviseOrigineObj = deviseRepository.findByCode(deviseOrigine);
@@ -69,12 +73,45 @@ public class FactureServiceImp implements FactureService {
         return factureRepo.findAll();
     }
 
+    //@Override
+    //public void retrieveAndUpdateStatusFacture() {
+
+    //}
+
+    @Override
+    public Double convertirMontant(Double montant, String deviseOrigine, String deviseDestination) {
+        return null;
+    }
+
+
+
+    @Override
+    public List<Object[]> getFacturesDuringBlackFriday() throws ParseException {
+        Date fd  = new SimpleDateFormat("dd-MM-yyyy").parse("23-11-2023");
+        Date ld = new SimpleDateFormat("dd-MM-yyyy").parse("27-11-2023");
+
+        List<Facture> factures = factureRepo.findFacturesBetweenDates(fd,ld);
+
+        List<Object[]> result = new ArrayList<>();
+
+        for (Facture facture : factures) {
+            Float originalAmount = facture.getPriceTotal();
+            Float discountedAmount = originalAmount * 0.8f; // 20% discount
+            facture.setPriceTotal(discountedAmount); // update the amount in the facture object
+            factureRepo.save(facture); // save the updated facture in the database
+            Object[] reservationData = {facture, originalAmount, discountedAmount};
+            result.add(reservationData);
+        }
+        return result;
+    }
+
         @Scheduled(cron = "*/30 * * * * ?")
     @Override
     public void retrieveAndUpdateStatusFacture() {
 
         // Archive all expired contracts
         this.archiveExpiredFacture();
+
 
         factureRepo.findByArchiveFalse().stream()
                 .filter(facture -> ChronoUnit.DAYS.between(LocalDate.now(),facture.getDatefacture()) < 30 )
@@ -83,7 +120,7 @@ public class FactureServiceImp implements FactureService {
                                 "Contrat num: " +facture.getIdFacture() +
                                         " de l'etudiant " + facture.getUser().getFirstName() + facture.getUser().getLastName() +
                                         " expirera aprés 15 jour de cette date " + facture.getDatefacture() +
-                                        " / "+ ChronoUnit.DAYS.between(LocalDate.now(),facture.getDatefacture())
+                                      " / "+ ChronoUnit.DAYS.between(LocalDate.now(), facture.getDatefacture())
                         )
                 );
     }
@@ -94,16 +131,16 @@ public class FactureServiceImp implements FactureService {
         factureRepo.findByArchiveFalseAndDatefacture(LocalDate.now())
                 .stream()
                 .forEach(facture -> facture.setArchive(true));
-    }
+/   }
 
 
-    public Double convertirMontant(Double montant, String deviseOrigine, String deviseDestination) {
-        Devise deviseOrigineObj = deviseRepository.findByCode(deviseOrigine);
-        Devise deviseDestinationObj = deviseRepository.findByCode(deviseDestination);
-
-        return montant * deviseOrigineObj.getTaux() / deviseDestinationObj.getTaux();
-    }
-
+//    public Double convertirMontant(Double montant, String deviseOrigine, String deviseDestination) {
+//        Devise deviseOrigineObj = deviseRepository.findByCode(deviseOrigine);
+//        Devise deviseDestinationObj = deviseRepository.findByCode(deviseDestination);
+//
+//        return montant * deviseOrigineObj.getTaux() / deviseDestinationObj.getTaux();
+//    }
+//
 
 }
 

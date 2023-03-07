@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.claimfacturesservice.Entities.Facture;
 import tn.esprit.claimfacturesservice.Service.FactureService;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -37,6 +38,11 @@ public class FactureController {
     @DeleteMapping("/{id}")
     public Boolean DeleteFacture(@PathVariable Long id) {
         return	factureService.DeleteFacture(id);
+    }
+
+    @GetMapping("/bF")
+    public List<Object[]> getReservationsDuringBlackFriday() throws ParseException {
+        return  factureService.getFacturesDuringBlackFriday();
     }
 
 }

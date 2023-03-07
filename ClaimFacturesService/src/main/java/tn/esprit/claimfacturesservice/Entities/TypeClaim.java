@@ -1,6 +1,6 @@
 package tn.esprit.claimfacturesservice.Entities;
 
-public enum TypeClaim {
+public enum     TypeClaim {
     POSITIVE,
     NEGATIVE
 }

@@ -2,13 +2,19 @@ package tn.esprit.claimfacturesservice.Controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.claimfacturesservice.Entities.Claim;
 import tn.esprit.claimfacturesservice.Entities.Delivery;
 import tn.esprit.claimfacturesservice.Entities.StatusClaim;
 import tn.esprit.claimfacturesservice.Service.ClaimService;
+import tn.esprit.claimfacturesservice.Service.EmailService;
+import tn.esprit.claimfacturesservice.dtoEntities.MailRequest;
+import tn.esprit.claimfacturesservice.dtoEntities.MailResponse;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -17,6 +23,7 @@ import java.util.List;
 public class ClaimController {
 @Autowired
     ClaimService claimService;
+   // "dateCreationClaim":"28/06/2023";
 
     @GetMapping("/hello")
     public String hello(){
@@ -39,10 +46,7 @@ public class ClaimController {
         return	claimService.UpdateClaimStatut(id,newStatut);
     }
 
-@GetMapping("/{claim}/{delivery}")
-public boolean kaka(@PathVariable Claim claim , @PathVariable Delivery delivery){
-        return claimService.DateValideClaim( claim ,  delivery);
-}
+
     @GetMapping("/{id}")
     public Claim retrieveclaimById(@PathVariable Long id ) {
         return	claimService.retrieveclaimById(id);
@@ -58,10 +62,48 @@ public boolean kaka(@PathVariable Claim claim , @PathVariable Delivery delivery)
         return	claimService.DeleteClaim(id);
     }
 
+
+    @GetMapping("/date/{Idclaim}/{Iddelivery}")
+    public boolean DateValideClaim(@PathVariable Long Idclaim , @PathVariable Long Iddelivery){
+
+        return claimService.DateValideClaim( Idclaim ,  Iddelivery);
+    }
+    @GetMapping("/isowner/{Idclaim}")
+    public boolean Isowner(@PathVariable Long Idclaim ){
+        return claimService.isOwner( Idclaim);
+    }
+
+    @PutMapping("/bann/{id}")
+    public void bann(@PathVariable Long id ) {
+        claimService.banUser(id);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // @PostMapping("/{claimId}/{invoiceNumber}")
- //  public void isClaimValid (@PathVariable Long claimId ,@PathVariable String invoiceNumber)  {
-  //     claimService.isClaimValid(claimId,invoiceNumber);
-  // }
+//  public void isClaimValid (@PathVariable Long claimId ,@PathVariable String invoiceNumber)  {
+//      claimService.isClaimValid(claimId,invoiceNumber);
+//   }
 
 //    @PostMapping("/sendemail")
 //    public void sendEmail(@RequestBody String from ,@RequestBody String to, @RequestBody String subject, @RequestBody String text) {

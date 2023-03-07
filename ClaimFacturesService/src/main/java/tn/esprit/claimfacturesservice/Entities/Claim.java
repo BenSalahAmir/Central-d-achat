@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -37,4 +38,7 @@ public class Claim implements Serializable {
     @JsonIgnore
     @ManyToOne
     private Facture facture;
+
+    @ManyToOne()
+private  DeliveryMen deliveryMen;
 }
