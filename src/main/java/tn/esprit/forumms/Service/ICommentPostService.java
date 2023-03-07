@@ -8,9 +8,13 @@ import java.util.List;
 public interface ICommentPostService {
     public List<CommentPost> getAllComments();
     public CommentPost addComment(CommentPost commentPost,Long idUser,Long idPost) ;
-    public CommentPost editComment(CommentPost commentPost,Long idUser);
-    public void deleteComment(Long commentId,Long idUser);
+   //public CommentPost editComment(CommentPost commentPost);
+
+    CommentPost editComment(CommentPost commentPost, Long idUser, Long idPost);
+
+    public void deleteComment(Long commentId, Long idUser);
     public CommentPost getById(Long commentId);
     public CommentPost setProductToComment(Long commentId,Long idProduct);
+    public List<CommentPost> getCommentsSortedByAverage(Long idPost);
 
 }

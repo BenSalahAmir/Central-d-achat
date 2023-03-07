@@ -42,6 +42,8 @@ public class IPostServiceImp implements IPostService {
     public Post addPost(Post post,Long idUser,Long idCategory) {
 
         List<Post> posts=postRepository.findAll();
+        CategoryProduct categoryProduct=categoryProductRepository.findById(idCategory).orElse(null);
+        User u= userRepository.findById(idUser).orElse(null);
         Post similarPost = null;
         for (Post post1:posts) {
             if (areStringsSimilar(post1.getDescriptionPost(),post.getDescriptionPost())){
@@ -52,8 +54,6 @@ public class IPostServiceImp implements IPostService {
             return similarPost;
         }
         else {
-        CategoryProduct categoryProduct=categoryProductRepository.findById(idCategory).orElse(null);
-        User u= userRepository.findById(idUser).orElse(null);
         post.setUserPost(u);
         post.setDateCreationPost(new Date());
         post.setCategoryPost(categoryProduct);
@@ -64,19 +64,19 @@ public class IPostServiceImp implements IPostService {
 
 
     @Override
-    public Post editPost(Post post,Long idUser) {
-        User user=userRepository.findById(idUser).orElse(null);
-        if (post.getUserPost().equals(user))
+    public Post editPost(Post post,Long idPost) {
+        Post post1=postRepository.findById(idPost).orElse(null);
+        post.setDateCreationPost(post1.getDateCreationPost());
+        post.setCategoryPost(post1.getCategoryPost());
+        post.setUserPost(post1.getUserPost());
         return postRepository.save(post);
-        else
-            return null;
     }
 
     @Override
     public void deletePost(Long postId,Long idUser) {
         User user=userRepository.findById(idUser).orElse(null);
         if (postRepository.findById(postId).orElse(null).getUserPost().equals(user))
-        postRepository.deleteById(postId);
+            postRepository.deleteById(postId);
     }
 
     @Override

@@ -31,35 +31,35 @@ public class IServiceLikeImp implements IServiceLike{
         LikeComment liketest=likeRepository.getLikeCommentByUserAndCommentPost(user,commentPost);
 
         if (commentPost!=null&&user!=null){
-        if (liketest!=null) {
-            return null;
-        }
-        else if (dislikeComment==null){
-            likeComment.setCommentPost(commentPost);
-            likeComment.setUser(user);
-            if (commentPost.getNbLiked()==null){
-                commentPost.setNbLiked(1L);
-                return likeRepository.save(likeComment);
+            if (liketest!=null) {
+                return null;
             }
-            else
-            {
-                commentPost.setNbDisliked(commentPost.getNbLiked()+1);
-                return likeRepository.save(likeComment);
+            else if (dislikeComment==null){
+                likeComment.setCommentPost(commentPost);
+                likeComment.setUser(user);
+                if (commentPost.getNbLiked()==null){
+                    commentPost.setNbLiked(1L);
+                    return likeRepository.save(likeComment);
+                }
+                else
+                {
+                    commentPost.setNbDisliked(commentPost.getNbLiked()+1);
+                    return likeRepository.save(likeComment);
+                }
+            }  else{
+                likeComment.setCommentPost(commentPost);
+                likeComment.setUser(user);
+                if (commentPost.getNbLiked()==null){
+                    commentPost.setNbLiked(1L);
+                    return likeRepository.save(likeComment);
+                }
+                else {
+                    commentPost.setNbLiked(commentPost.getNbLiked()+1);
+                    commentPost.setNbDisliked(commentPost.getNbDisliked()-1);
+                    dislikeRepository.deleteById(dislikeComment.getIdDislike());
+                    return likeRepository.save(likeComment);
+                }
             }
-        }  else{
-            likeComment.setCommentPost(commentPost);
-            likeComment.setUser(user);
-            if (commentPost.getNbLiked()==null){
-                commentPost.setNbLiked(1L);
-                return likeRepository.save(likeComment);
-            }
-            else {
-                commentPost.setNbLiked(commentPost.getNbLiked()+1);
-                commentPost.setNbDisliked(commentPost.getNbDisliked()-1);
-                dislikeRepository.deleteById(dislikeComment.getIdDislike());
-                return likeRepository.save(likeComment);
-            }
-        }
         }
         else return null;
     }

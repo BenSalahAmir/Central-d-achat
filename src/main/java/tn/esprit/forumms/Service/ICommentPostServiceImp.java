@@ -17,11 +17,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -68,6 +66,7 @@ public class ICommentPostServiceImp implements ICommentPostService{
         emoticonMap.put(":(", "\uD83D\uDE41");
         emoticonMap.put(":D", "\uD83D\uDE00");
         emoticonMap.put(":P", "\uD83D\uDE1B");
+        emoticonMap.put("<3", "\uD83D\uDC97");
 
         for (Map.Entry<String, String> entry : emoticonMap.entrySet()) {
             String pattern = Pattern.quote(entry.getKey()); // escape any special characters
@@ -81,40 +80,64 @@ public class ICommentPostServiceImp implements ICommentPostService{
     public CommentPost addComment(CommentPost commentPost,Long idUser,Long idPost) {
         User user=userRepository.findById(idUser).orElse(null);
         Post post=postRepository.findById(idPost).orElse(null);
-        commentPost.setUserComment(user);
-        commentPost.setPost(post);
-        String commentTextWithEmoji = convertEmoticonsToEmoji(commentPost.getDescriptionComment());
-        commentPost.setDescriptionComment(commentTextWithEmoji);
-        List<String> badWords = fetchBadWords();
+        if(user!=null&&post!=null){
+            commentPost.setUserComment(user);
+            commentPost.setPost(post);
+            String commentTextWithEmoji = convertEmoticonsToEmoji(commentPost.getDescriptionComment());
+            commentPost.setDescriptionComment(commentTextWithEmoji);
+            List<String> badWords = fetchBadWords();
 
-        boolean containsBadWord = false;
-        for (String badWord : badWords) {
-            if (commentPost.getDescriptionComment().toLowerCase().contains(badWord.toLowerCase())) {
-                containsBadWord = true;
-                break;
+            boolean containsBadWord = false;
+            for (String badWord : badWords) {
+                if (commentPost.getDescriptionComment().toLowerCase().contains(badWord.toLowerCase())) {
+                    containsBadWord = true;
+                    break;
+                }
+            }
+
+            if (containsBadWord) {
+                return null;
+            }
+            else {
+                commentPost.setDateCreationComment(new Date());
+                return commentPostRepository.save(commentPost);
             }
         }
-
-        if (containsBadWord) {
-            return null;
-        }
-        return commentPostRepository.save(commentPost);
+        else return null;
     }
 
     @Override
-    public CommentPost editComment(CommentPost commentPost,Long idUser) {
-        User user=userRepository.findById(idUser).orElse(null);
-        if (commentPost.getUserComment().equals(user))
-        return commentPostRepository.save(commentPost);
-        else
-            return null;
+    public CommentPost editComment(CommentPost commentPost, Long idUser, Long idComment) {
+        User user =userRepository.findById(idUser).orElse(null);
+        CommentPost comment =commentPostRepository.findById(idComment).orElse(null);
+        if (user!=null && comment!=null && comment.getUserComment().equals(user)){
+            List<String> badWords = fetchBadWords();
+            String text = commentPost.getDescriptionComment();
+            for (String word : badWords) {
+                if (text.toLowerCase().contains(word.toLowerCase())) {
+                    return null;
+                }
+            }
+            text = convertEmoticonsToEmoji(text);
+            commentPost.setDescriptionComment(text);
+            commentPost.setDateCreationComment(comment.getDateCreationComment());
+            commentPost.setNbLiked(comment.getNbLiked());
+            commentPost.setNbDisliked(comment.getNbDisliked());
+            commentPost.setPost(comment.getPost());
+            commentPost.setUserComment(comment.getUserComment());
+            return commentPostRepository.save(commentPost);
+        }
+        else return null;
     }
 
     @Override
     public void deleteComment(Long commentId,Long idUser) {
         User user=userRepository.findById(idUser).orElse(null);
-        if (commentPostRepository.findById(commentId).orElse(null).getUserComment().equals(user))
-        commentPostRepository.deleteById(commentId);
+        CommentPost comment=commentPostRepository.findById(commentId).orElse(null);
+        if(user!=null&&comment!=null){
+            if (comment.getUserComment().equals(user))
+                commentPostRepository.deleteById(commentId);
+        }
     }
 
     @Override
@@ -126,8 +149,30 @@ public class ICommentPostServiceImp implements ICommentPostService{
     public CommentPost setProductToComment(Long commentId, Long idProduct) {
         Product product=productRepository.findById(idProduct).orElse(null);
         CommentPost comment=commentPostRepository.findById(commentId).orElse(null);
-        comment.setProductForum(product);
-        return commentPostRepository.save(comment);
+        if(product!=null&&comment!=null){
+            comment.setProductForum(product);
+            return commentPostRepository.save(comment);
+        }
+        return null;
+    }
+
+    @Override
+    public List<CommentPost> getCommentsSortedByAverage(Long idPost) {
+        Post post=postRepository.findById(idPost).orElse(null);
+        if (post!=null){
+            List<CommentPost> comments = post.getCommentList();
+            Comparator<CommentPost> avgReactions = Comparator.comparingDouble(c -> {
+                double likes = Optional.ofNullable(c.getNbLiked()).orElse(0L);
+                double dislikes = Optional.ofNullable(c.getNbDisliked()).orElse(0L);
+                double produitVendus = Optional.ofNullable(c.getUserComment().getProductListUser().stream().count()).orElse(0L);
+                return (likes - dislikes)*60+produitVendus*40 / 100.0;
+            });
+
+            return comments.stream()
+                    .sorted(avgReactions.reversed())
+                    .collect(Collectors.toList());
+        }
+        else return null;
     }
 
 

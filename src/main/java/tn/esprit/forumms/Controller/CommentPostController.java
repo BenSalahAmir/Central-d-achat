@@ -23,23 +23,33 @@ public class CommentPostController {
         return iCommentPostService.getAllComments();
     }
 
-    @PostMapping("add/{idUser}/{idPost}")
+    @PostMapping("/add/{idUser}/{idPost}")
     public CommentPost addComment(@RequestBody CommentPost c, @PathVariable Long idUser,@PathVariable Long idPost){
         return iCommentPostService.addComment(c,idUser,idPost);
     }
-    @GetMapping("getById/{idComment}")
+
+    @PutMapping("/edit/{idUser}/{idPost}")
+    public CommentPost editComment(@RequestBody CommentPost c, @PathVariable Long idUser,@PathVariable Long idPost){
+        return iCommentPostService.editComment(c,idUser,idPost);
+    }
+    @GetMapping("/getById/{idComment}")
     public CommentPost getCommById(@PathVariable Long idComment){
         return iCommentPostService.getById(idComment);
     }
 
-    @DeleteMapping("delete/{idUser}/{idPost}")
+    @DeleteMapping("/delete/{idUser}/{idPost}")
     public void deleteComment(@PathVariable Long idUser,@PathVariable Long idComment){
          iCommentPostService.deleteComment(idComment,idUser);
     }
 
-    @PutMapping("setProduct/{idComment}/{idProduct}")
+    @PutMapping("/setProduct/{idComment}/{idProduct}")
     public CommentPost setProductToComment(@PathVariable Long idComment,@PathVariable Long idProduct){
         return iCommentPostService.setProductToComment(idComment,idProduct);
+    }
+
+    @GetMapping("/getSorted/{idPost}")
+    public List<CommentPost> getCommentsSortedByAverage(@PathVariable Long idPost){
+        return iCommentPostService.getCommentsSortedByAverage(idPost);
     }
 
 }

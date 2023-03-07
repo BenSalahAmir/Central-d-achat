@@ -53,19 +53,19 @@ public class User implements Serializable {
     private List<Cart> carts ;
 
     /**/
-
-    @OneToMany(mappedBy = "userPost")
+    @JsonIgnore
+    @OneToMany(mappedBy = "userPost",cascade = CascadeType.ALL)
     private List<Post>posts;
-
-    @OneToMany(mappedBy = "userComment")
+    @JsonIgnore
+    @OneToMany(mappedBy = "userComment",cascade = CascadeType.ALL)
     List<CommentPost>commentList;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<LikeComment> likeComments;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<DislikeComment> dislikeComments;
 
     @ManyToMany(fetch = FetchType.EAGER)

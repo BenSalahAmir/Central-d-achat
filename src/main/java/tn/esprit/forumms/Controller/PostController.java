@@ -33,4 +33,9 @@ public class PostController{
         return iPostService.getById(idPost);
     }
 
+    @PutMapping("edit/{idUser}")
+    public Post editPost(@RequestBody Post p,@PathVariable Long idUser){
+        return iPostService.editPost(p,idUser);
+    }
+
 }
