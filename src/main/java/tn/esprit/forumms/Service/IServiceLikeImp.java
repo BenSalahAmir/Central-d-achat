@@ -51,6 +51,7 @@ public class IServiceLikeImp implements IServiceLike{
                 likeComment.setUser(user);
                 if (commentPost.getNbLiked()==null){
                     commentPost.setNbLiked(1L);
+                    commentPost.setNbDisliked(commentPost.getNbDisliked()-1);
                     return likeRepository.save(likeComment);
                 }
                 else {

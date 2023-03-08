@@ -30,7 +30,7 @@ public class Post implements Serializable {
     private CategoryProduct categoryPost;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
     private List<CommentPost> commentList;
 
     @JsonIgnore

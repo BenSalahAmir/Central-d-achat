@@ -51,6 +51,7 @@ public class IServiceDislikeImp implements IServiceDislike{
                 dislikeComment.setUser(user);
                 if (commentPost.getNbDisliked()==null){
                     commentPost.setNbDisliked(1L);
+                    commentPost.setNbLiked(commentPost.getNbLiked()-1);
                     return dislikeRepository.save(dislikeComment);
                 }
                 else {

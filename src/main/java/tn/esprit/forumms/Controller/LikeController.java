@@ -17,4 +17,8 @@ public class LikeController {
     public LikeComment addDislike(@RequestBody LikeComment likeComment, @PathVariable String idUser, @PathVariable Long idComment){
         return iServiceLike.addLike(likeComment,idUser,idComment);
     }
+    @DeleteMapping("/deletelike/{idLike}/{idUser}")
+    public void Deletelike(@PathVariable Long idLike,@PathVariable String idUser){
+        iServiceLike.Deletelike(idLike,idUser);
+    }
 }

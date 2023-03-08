@@ -37,8 +37,8 @@ public class CommentPostController {
         return iCommentPostService.getById(idComment);
     }
 
-    @DeleteMapping("/delete/{idUser}/{idPost}")
-    public void deleteComment(@PathVariable String idUser,@PathVariable Long idComment){
+    @DeleteMapping("/delete/{idComment}/{idUser}")
+    public void deleteComment(@PathVariable Long idComment,@PathVariable String idUser){
          iCommentPostService.deleteComment(idComment,idUser);
     }
 
