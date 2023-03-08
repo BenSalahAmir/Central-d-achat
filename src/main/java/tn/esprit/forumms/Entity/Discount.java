@@ -15,6 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Discount implements Serializable {
+
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long IdDiscount;
@@ -37,4 +38,5 @@ public class Discount implements Serializable {
 
     @OneToOne
     private Cart cart;
+
 }

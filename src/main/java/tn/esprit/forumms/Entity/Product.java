@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
 @ToString
 @Builder
 @Entity
@@ -28,12 +29,14 @@ public class Product implements Serializable {
     private String marqueProduct;
     @Temporal(TemporalType.DATE)
     private Date dateCreationProduct;
+
     @ManyToOne
     private CategoryProduct categoryProduct;
 
     @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<RatingProduct> ratingProductList;
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "product")
@@ -55,5 +58,6 @@ public class Product implements Serializable {
 
     @ManyToOne
     private Sous_CategoryProduct sousCategorie;
+
 
 }

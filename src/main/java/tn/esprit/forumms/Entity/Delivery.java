@@ -6,14 +6,13 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Delivery implements Serializable    {
+public class Delivery implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_Delivery;
@@ -40,4 +39,8 @@ public class Delivery implements Serializable    {
     @JsonIgnore
     @OneToOne()
     private Cart cart ;
+
+    @JsonIgnore
+    @OneToOne
+    private Facture facture;
 }

@@ -15,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryProduct implements Serializable {
-
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long idCategoryProduct;
@@ -29,5 +28,5 @@ public class CategoryProduct implements Serializable {
 
     @OneToMany(mappedBy = "category")
     private List<Sous_CategoryProduct> sous_categoryProducts ;
-}
 
+}

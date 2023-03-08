@@ -80,9 +80,7 @@ public class ICommentPostServiceImp implements ICommentPostService{
     public CommentPost addComment(CommentPost commentPost,Long idUser,Long idPost) {
         User user=userRepository.findById(idUser).orElse(null);
         Post post=postRepository.findById(idPost).orElse(null);
-        if(user!=null&&post!=null){
-            commentPost.setUserComment(user);
-            commentPost.setPost(post);
+        if(user!=null&&post!=null&&commentPost.getDescriptionComment()!=null){
             String commentTextWithEmoji = convertEmoticonsToEmoji(commentPost.getDescriptionComment());
             commentPost.setDescriptionComment(commentTextWithEmoji);
             List<String> badWords = fetchBadWords();
@@ -99,6 +97,8 @@ public class ICommentPostServiceImp implements ICommentPostService{
                 return null;
             }
             else {
+                commentPost.setUserComment(user);
+                commentPost.setPost(post);
                 commentPost.setDateCreationComment(new Date());
                 return commentPostRepository.save(commentPost);
             }
@@ -110,7 +110,7 @@ public class ICommentPostServiceImp implements ICommentPostService{
     public CommentPost editComment(CommentPost commentPost, Long idUser, Long idComment) {
         User user =userRepository.findById(idUser).orElse(null);
         CommentPost comment =commentPostRepository.findById(idComment).orElse(null);
-        if (user!=null && comment!=null && comment.getUserComment().equals(user)){
+        if (comment!=null && comment.getUserComment().equals(user)){
             List<String> badWords = fetchBadWords();
             String text = commentPost.getDescriptionComment();
             for (String word : badWords) {
@@ -161,15 +161,16 @@ public class ICommentPostServiceImp implements ICommentPostService{
         Post post=postRepository.findById(idPost).orElse(null);
         if (post!=null){
             List<CommentPost> comments = post.getCommentList();
-            Comparator<CommentPost> avgReactions = Comparator.comparingDouble(c -> {
+            Comparator<CommentPost> score = Comparator.comparingDouble(c -> {
                 double likes = Optional.ofNullable(c.getNbLiked()).orElse(0L);
                 double dislikes = Optional.ofNullable(c.getNbDisliked()).orElse(0L);
-                double produitVendus = Optional.ofNullable(c.getUserComment().getProductListUser().stream().count()).orElse(0L);
-                return (likes - dislikes)*60+produitVendus*40 / 100.0;
+                double produitVendus = Optional.of((long) c.getUserComment().getProductListUser().size()).orElse(0L);
+                double claimsnbr = Optional.of((long) c.getUserComment().getClaimList().size()).orElse(0L);
+                return (likes - dislikes)*30+produitVendus*30-claimsnbr*40 / 100.0;
             });
 
             return comments.stream()
-                    .sorted(avgReactions.reversed())
+                    .sorted(score.reversed())
                     .collect(Collectors.toList());
         }
         else return null;

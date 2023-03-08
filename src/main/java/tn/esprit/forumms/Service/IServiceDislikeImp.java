@@ -31,35 +31,35 @@ public class IServiceDislikeImp implements IServiceDislike{
         DislikeComment disliketest=dislikeRepository.getDislikeCommentByUserAndCommentPost(user,commentPost);
 
         if (commentPost!=null&&user!=null){
-        if (disliketest!=null) {
-            return null;
-        }
-        else if (likeComment==null){
-            dislikeComment.setCommentPost(commentPost);
-            dislikeComment.setUser(user);
-            if (commentPost.getNbDisliked()==null){
-                commentPost.setNbDisliked(1L);
-                return dislikeRepository.save(dislikeComment);
+            if (disliketest!=null) {
+                return null;
             }
-            else
-            {
-                commentPost.setNbDisliked(commentPost.getNbDisliked()+1);
-                return dislikeRepository.save(dislikeComment);
+            else if (likeComment==null){
+                dislikeComment.setCommentPost(commentPost);
+                dislikeComment.setUser(user);
+                if (commentPost.getNbDisliked()==null){
+                    commentPost.setNbDisliked(1L);
+                    return dislikeRepository.save(dislikeComment);
+                }
+                else
+                {
+                    commentPost.setNbLiked(commentPost.getNbDisliked()+1);
+                    return dislikeRepository.save(dislikeComment);
+                }
+            }  else{
+                dislikeComment.setCommentPost(commentPost);
+                dislikeComment.setUser(user);
+                if (commentPost.getNbDisliked()==null){
+                    commentPost.setNbDisliked(1L);
+                    return dislikeRepository.save(dislikeComment);
+                }
+                else {
+                    commentPost.setNbDisliked(commentPost.getNbDisliked()+1);
+                    commentPost.setNbLiked(commentPost.getNbLiked()-1);
+                    likeRepository.deleteById(likeComment.getIdLike());
+                    return dislikeRepository.save(dislikeComment);
+                }
             }
-        }  else{
-            dislikeComment.setCommentPost(commentPost);
-            dislikeComment.setUser(user);
-            if (commentPost.getNbDisliked()==null){
-                commentPost.setNbDisliked(1L);
-                return dislikeRepository.save(dislikeComment);
-            }
-            else {
-            commentPost.setNbDisliked(commentPost.getNbDisliked()+1);
-            commentPost.setNbLiked(commentPost.getNbLiked()-1);
-            likeRepository.deleteById(likeComment.getIdLike());
-            return dislikeRepository.save(dislikeComment);
-            }
-        }
         }
         else return null;
     }
@@ -67,8 +67,11 @@ public class IServiceDislikeImp implements IServiceDislike{
     @Transactional
     @Override
     public void deleteDislike(Long idDislike) {
-        CommentPost commentPost=dislikeRepository.findById(idDislike).orElse(null).getCommentPost();
-        commentPost.setNbDisliked(commentPost.getNbDisliked()-1);
-        dislikeRepository.deleteById(idDislike);
+        DislikeComment dislikeComment=dislikeRepository.findById(idDislike).orElse(null);
+        if (dislikeComment!=null){
+            CommentPost commentPost=dislikeComment.getCommentPost();
+            commentPost.setNbDisliked(commentPost.getNbDisliked()-1);
+            dislikeRepository.deleteById(idDislike);
+        }
     }
 }

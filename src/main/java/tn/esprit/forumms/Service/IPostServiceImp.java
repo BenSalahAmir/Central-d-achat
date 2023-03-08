@@ -2,6 +2,7 @@ package tn.esprit.forumms.Service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.forumms.Entity.CategoryProduct;
 import tn.esprit.forumms.Entity.Post;
 import tn.esprit.forumms.Entity.User;
@@ -9,6 +10,7 @@ import tn.esprit.forumms.Repository.CategoryProductRepository;
 import tn.esprit.forumms.Repository.PostRepository;
 import tn.esprit.forumms.Repository.UserRepository;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -39,7 +41,7 @@ public class IPostServiceImp implements IPostService {
         return ((double)intersection.size() / (double)difference.size()) >= 0.7;
     }
     @Override
-    public Post addPost(Post post,Long idUser,Long idCategory) {
+    public Post addPost(Post post,Long idUser,Long idCategory, MultipartFile imageFile) throws IOException {
 
         List<Post> posts=postRepository.findAll();
         CategoryProduct categoryProduct=categoryProductRepository.findById(idCategory).orElse(null);
@@ -57,6 +59,9 @@ public class IPostServiceImp implements IPostService {
         post.setUserPost(u);
         post.setDateCreationPost(new Date());
         post.setCategoryPost(categoryProduct);
+        if (imageFile != null && !imageFile.isEmpty()) {
+            post.setImagePost(imageFile.getBytes());
+        }
 
         return postRepository.save(post);
         }
@@ -69,13 +74,15 @@ public class IPostServiceImp implements IPostService {
         post.setDateCreationPost(post1.getDateCreationPost());
         post.setCategoryPost(post1.getCategoryPost());
         post.setUserPost(post1.getUserPost());
+        post.setImagePost(post1.getImagePost());
         return postRepository.save(post);
     }
 
     @Override
     public void deletePost(Long postId,Long idUser) {
         User user=userRepository.findById(idUser).orElse(null);
-        if (postRepository.findById(postId).orElse(null).getUserPost().equals(user))
+        Post post=postRepository.findById(postId).orElse(null);
+        if (post!=null&&post.getUserPost().equals(user))
             postRepository.deleteById(postId);
     }
 

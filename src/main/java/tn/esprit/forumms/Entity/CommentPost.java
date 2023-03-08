@@ -1,10 +1,7 @@
 package tn.esprit.forumms.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,6 +13,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CommentPost implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -37,6 +35,7 @@ public class CommentPost implements Serializable {
     @JsonIgnore
     @OneToOne(mappedBy = "comment",cascade = CascadeType.ALL)
     private Product productForum;
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "commentPost",cascade = CascadeType.ALL)

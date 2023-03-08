@@ -26,8 +26,9 @@ public class Adress implements Serializable {
     private double Longitude ;
     @JsonIgnore
     @OneToMany(mappedBy = "adress")
-    List<Delivery> deliveries;
+    List<Delivery>deliveries;
     @JsonIgnore
     @OneToMany(mappedBy = "adresslivreur")
     List<DeliveryMen>deliveryMen ;
+
 }

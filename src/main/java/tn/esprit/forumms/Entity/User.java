@@ -31,6 +31,8 @@ public class User implements Serializable {
     private Long phone;
     private boolean disponibilite;
     private int age ;
+    private  int nbrAvertissment ;
+private  boolean banned;
 
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
@@ -40,35 +42,44 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "idFavori"))*/
     private List<FavoriProduct> favoris ;
 
+
+    //@OneToMany(mappedBy = "userclaim")
+    //private List<Claim> claimList;
+
     @OneToMany(mappedBy = "userRating")
     private List<RatingProduct> ratingProductList;
 
+
     @OneToMany(mappedBy = "userProduct")
     private List<Product> productListUser;
-/**/
+
     @OneToMany(mappedBy = "usedBy")
     private List<Discount> discounts ;
 
     @OneToMany(mappedBy = "user")
     private List<Cart> carts ;
 
-    /**/
     @JsonIgnore
-    @OneToMany(mappedBy = "userPost",cascade = CascadeType.ALL)
-    private List<Post>posts;
-    @JsonIgnore
-    @OneToMany(mappedBy = "userComment",cascade = CascadeType.ALL)
-    List<CommentPost>commentList;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<LikeComment> likeComments;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<DislikeComment> dislikeComments;
+
+    @OneToMany(mappedBy = "userPost")
+    private List<Post>posts;
+
+    @OneToMany(mappedBy = "userComment")
+    List<CommentPost>commentList;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles =new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Facture> factureList;
+
+    @OneToMany(mappedBy = "userclaim")
+    private List<Claim> claimList;
 }

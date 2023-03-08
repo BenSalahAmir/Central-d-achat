@@ -1,7 +1,6 @@
 package tn.esprit.forumms.Service;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.forumms.Entity.CommentPost;
 import tn.esprit.forumms.Entity.Product;

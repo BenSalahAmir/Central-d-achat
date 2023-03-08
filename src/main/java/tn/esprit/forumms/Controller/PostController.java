@@ -1,10 +1,13 @@
 package tn.esprit.forumms.Controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.forumms.Entity.Post;
 import tn.esprit.forumms.Service.IPostService;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -14,10 +17,21 @@ import java.util.List;
 public class PostController{
     public final IPostService iPostService;
 
-    @PostMapping("add/{idUser}/{idCategory}")
-    public Post addPost(@RequestBody Post p,@PathVariable Long idUser,@PathVariable Long idCategory){
-        return iPostService.addPost(p,idUser, idCategory);
+    @PostMapping("/add")
+    public ResponseEntity<?> addPost(@RequestParam("file") MultipartFile file,
+                                     @RequestParam("description") String description,
+                                     @RequestParam("userId") Long userId,
+                                     @RequestParam("topic") String topic,
+                                     @RequestParam("categoryId") Long categoryId) throws IOException {
+
+        Post post = new Post();
+        post.setDescriptionPost(description);
+        post.setTopicPost(topic);
+
+        Post savedPost = iPostService.addPost(post, userId, categoryId, file);
+        return ResponseEntity.ok(savedPost);
     }
+
     @GetMapping("getall")
     public List<Post> getAllPosts(){
         return iPostService.getAllPosts();

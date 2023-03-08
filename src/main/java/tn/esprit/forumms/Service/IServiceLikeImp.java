@@ -66,8 +66,11 @@ public class IServiceLikeImp implements IServiceLike{
     @Transactional
     @Override
     public void Deletelike(Long idLike) {
-        CommentPost commentPost=likeRepository.findById(idLike).orElse(null).getCommentPost();
-        commentPost.setNbLiked(commentPost.getNbLiked()-1);
-        likeRepository.deleteById(idLike);
+        LikeComment likeComment=likeRepository.findById(idLike).orElse(null);
+        if (likeComment!=null){
+            CommentPost commentPost=likeComment.getCommentPost();
+            commentPost.setNbLiked(commentPost.getNbLiked()-1);
+            likeRepository.deleteById(idLike);
+        }
     }
 }

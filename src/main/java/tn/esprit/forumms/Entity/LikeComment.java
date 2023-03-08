@@ -5,7 +5,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-
 @Entity
 @Getter
 @Setter
@@ -24,4 +23,5 @@ public class LikeComment implements Serializable {
     @JsonIgnore
     @ManyToOne
     private User user;
+
 }

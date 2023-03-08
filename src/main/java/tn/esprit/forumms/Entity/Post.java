@@ -1,10 +1,7 @@
 package tn.esprit.forumms.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,13 +13,15 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Post implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long idPost;
     private String topicPost;
     private String descriptionPost;
-    private String imagePost;
+    @Lob
+    private byte[] imagePost;
     @Temporal(TemporalType.DATE)
     private Date dateCreationPost;
 
@@ -31,14 +30,11 @@ public class Post implements Serializable {
     private CategoryProduct categoryPost;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post")
     private List<CommentPost> commentList;
 
     @JsonIgnore
     @ManyToOne
     private User userPost;
 
-
-
 }
-

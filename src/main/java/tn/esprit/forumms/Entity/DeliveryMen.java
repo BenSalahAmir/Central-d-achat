@@ -31,8 +31,13 @@ public class DeliveryMen implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "deliveryMen")
-    public List<Delivery> deliveries ;
+    public List<Delivery>deliveries ;
     @JsonIgnore
     @ManyToOne
     public Adress adresslivreur ;
+    @JsonIgnore
+
+    @OneToMany
+    public List<Claim> claimList;
+
 }

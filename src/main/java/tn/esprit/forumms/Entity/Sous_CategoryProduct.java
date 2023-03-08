@@ -18,6 +18,7 @@ public class Sous_CategoryProduct implements Serializable {
     private Long id;
 
     private String nom;
+
     @ManyToOne()
     private CategoryProduct category;
 
@@ -26,5 +27,4 @@ public class Sous_CategoryProduct implements Serializable {
 
     @OneToMany(mappedBy = "sousCategoriePromotion")
     private List<PromotionProduct> promotionProductsSousCategorie;
-
 }
