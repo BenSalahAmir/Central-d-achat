@@ -10,6 +10,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
+import org.springframework.data.geo.Point;
+
 @Entity
 @Getter
 @Setter

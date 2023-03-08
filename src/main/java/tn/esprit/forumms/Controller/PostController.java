@@ -20,7 +20,7 @@ public class PostController{
     @PostMapping("/add")
     public ResponseEntity<?> addPost(@RequestParam("file") MultipartFile file,
                                      @RequestParam("description") String description,
-                                     @RequestParam("userId") Long userId,
+                                     @RequestParam("userId") String userId,
                                      @RequestParam("topic") String topic,
                                      @RequestParam("categoryId") Long categoryId) throws IOException {
 
@@ -38,7 +38,7 @@ public class PostController{
     }
 
     @DeleteMapping("delete/{idPost}/{idUser}")
-    public void deletePost(@PathVariable Long idPost,@PathVariable Long idUser){
+    public void deletePost(@PathVariable Long idPost,@PathVariable String idUser){
         iPostService.deletePost(idPost, idUser);
     }
 
@@ -47,9 +47,9 @@ public class PostController{
         return iPostService.getById(idPost);
     }
 
-    @PutMapping("edit/{idUser}")
-    public Post editPost(@RequestBody Post p,@PathVariable Long idUser){
-        return iPostService.editPost(p,idUser);
+    @PutMapping("edit/{idPost}/{idUser}")
+    public Post editPost(@RequestBody Post p,@PathVariable Long idPost,@PathVariable String idUser){
+        return iPostService.editPost(p,idPost,idUser);
     }
 
 }

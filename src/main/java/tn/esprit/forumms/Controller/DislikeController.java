@@ -13,7 +13,7 @@ public class DislikeController {
     public final IServiceDislike iServiceDislike;
 
     @PostMapping("/dislikeComment/{idUser}/{idComment}")
-    public DislikeComment addDislike(@RequestBody DislikeComment dislikeComment, @PathVariable Long idUser,@PathVariable Long idComment){
+    public DislikeComment addDislike(@RequestBody DislikeComment dislikeComment, @PathVariable String idUser,@PathVariable Long idComment){
         return iServiceDislike.addDislike(dislikeComment,idUser,idComment);
     }
 }

@@ -1,5 +1,6 @@
 package tn.esprit.forumms.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,18 +16,19 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryProduct implements Serializable {
+
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long idCategoryProduct;
     private String nameCategoryProduct;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "categoryProduct")
     private List<Product> productListCategory;
 
     @OneToMany(mappedBy = "categoryPost")
     private List<Post>posts;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
     private List<Sous_CategoryProduct> sous_categoryProducts ;
-
 }

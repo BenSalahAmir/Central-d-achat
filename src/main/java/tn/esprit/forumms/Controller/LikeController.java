@@ -14,7 +14,7 @@ public class LikeController {
 
 
     @PostMapping("/likeComment/{idUser}/{idComment}")
-    public LikeComment addDislike(@RequestBody LikeComment likeComment, @PathVariable Long idUser, @PathVariable Long idComment){
+    public LikeComment addDislike(@RequestBody LikeComment likeComment, @PathVariable String idUser, @PathVariable Long idComment){
         return iServiceLike.addLike(likeComment,idUser,idComment);
     }
 }

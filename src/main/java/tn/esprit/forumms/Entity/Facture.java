@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -42,4 +43,3 @@ public class Facture implements Serializable {
     @OneToOne(mappedBy = "facture")
     private Delivery delivery;
 }
-

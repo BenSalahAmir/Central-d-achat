@@ -41,7 +41,7 @@ public class IPostServiceImp implements IPostService {
         return ((double)intersection.size() / (double)difference.size()) >= 0.7;
     }
     @Override
-    public Post addPost(Post post,Long idUser,Long idCategory, MultipartFile imageFile) throws IOException {
+    public Post addPost(Post post,String idUser,Long idCategory, MultipartFile imageFile) throws IOException {
 
         List<Post> posts=postRepository.findAll();
         CategoryProduct categoryProduct=categoryProductRepository.findById(idCategory).orElse(null);
@@ -69,17 +69,20 @@ public class IPostServiceImp implements IPostService {
 
 
     @Override
-    public Post editPost(Post post,Long idPost) {
+    public Post editPost(Post post, Long idPost, String idUser) {
         Post post1=postRepository.findById(idPost).orElse(null);
-        post.setDateCreationPost(post1.getDateCreationPost());
-        post.setCategoryPost(post1.getCategoryPost());
-        post.setUserPost(post1.getUserPost());
-        post.setImagePost(post1.getImagePost());
-        return postRepository.save(post);
+        if (post1.getUserPost().getIdUser().equals(idUser)){
+            post.setDateCreationPost(post1.getDateCreationPost());
+            post.setCategoryPost(post1.getCategoryPost());
+            post.setUserPost(post1.getUserPost());
+            post.setImagePost(post1.getImagePost());
+            return postRepository.save(post);
+        }
+        return null;
     }
 
     @Override
-    public void deletePost(Long postId,Long idUser) {
+    public void deletePost(Long postId,String idUser) {
         User user=userRepository.findById(idUser).orElse(null);
         Post post=postRepository.findById(postId).orElse(null);
         if (post!=null&&post.getUserPost().equals(user))

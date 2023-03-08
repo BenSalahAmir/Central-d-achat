@@ -24,12 +24,12 @@ public class CommentPostController {
     }
 
     @PostMapping("/add/{idUser}/{idPost}")
-    public CommentPost addComment(@RequestBody CommentPost c, @PathVariable Long idUser,@PathVariable Long idPost){
+    public CommentPost addComment(@RequestBody CommentPost c, @PathVariable String idUser,@PathVariable Long idPost){
         return iCommentPostService.addComment(c,idUser,idPost);
     }
 
     @PutMapping("/edit/{idUser}/{idPost}")
-    public CommentPost editComment(@RequestBody CommentPost c, @PathVariable Long idUser,@PathVariable Long idPost){
+    public CommentPost editComment(@RequestBody CommentPost c, @PathVariable String idUser,@PathVariable Long idPost){
         return iCommentPostService.editComment(c,idUser,idPost);
     }
     @GetMapping("/getById/{idComment}")
@@ -38,7 +38,7 @@ public class CommentPostController {
     }
 
     @DeleteMapping("/delete/{idUser}/{idPost}")
-    public void deleteComment(@PathVariable Long idUser,@PathVariable Long idComment){
+    public void deleteComment(@PathVariable String idUser,@PathVariable Long idComment){
          iCommentPostService.deleteComment(idComment,idUser);
     }
 

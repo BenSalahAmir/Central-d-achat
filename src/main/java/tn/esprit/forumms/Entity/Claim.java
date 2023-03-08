@@ -1,5 +1,6 @@
 package tn.esprit.forumms.Entity;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -26,8 +28,7 @@ public class Claim implements Serializable {
     private CategoryClaim categoryClaim;
     @Enumerated(EnumType.STRING)
     private StatusClaim statusClaim;
-    @Enumerated(EnumType.STRING)
-    private TypeClaim typeClaim;
+
 
 
     @JsonIgnore
@@ -39,5 +40,5 @@ public class Claim implements Serializable {
     private Facture facture;
 
     @ManyToOne()
-private  DeliveryMen deliveryMen;
+    private  DeliveryMen deliveryMen;
 }

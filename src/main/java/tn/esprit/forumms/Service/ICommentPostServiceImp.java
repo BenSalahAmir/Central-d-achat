@@ -74,7 +74,7 @@ public class ICommentPostServiceImp implements ICommentPostService{
     }
 
     @Override
-    public CommentPost addComment(CommentPost commentPost,Long idUser,Long idPost) {
+    public CommentPost addComment(CommentPost commentPost,String idUser,Long idPost) {
         User user=userRepository.findById(idUser).orElse(null);
         Post post=postRepository.findById(idPost).orElse(null);
         if(user!=null&&post!=null&&commentPost.getDescriptionComment()!=null){
@@ -104,7 +104,7 @@ public class ICommentPostServiceImp implements ICommentPostService{
     }
 
     @Override
-    public CommentPost editComment(CommentPost commentPost, Long idUser, Long idComment) {
+    public CommentPost editComment(CommentPost commentPost, String idUser, Long idComment) {
         User user =userRepository.findById(idUser).orElse(null);
         CommentPost comment =commentPostRepository.findById(idComment).orElse(null);
         if (comment!=null && comment.getUserComment().equals(user)){
@@ -128,7 +128,7 @@ public class ICommentPostServiceImp implements ICommentPostService{
     }
 
     @Override
-    public void deleteComment(Long commentId,Long idUser) {
+    public void deleteComment(Long commentId,String idUser) {
         User user=userRepository.findById(idUser).orElse(null);
         CommentPost comment=commentPostRepository.findById(commentId).orElse(null);
         if(user!=null&&comment!=null){
@@ -153,7 +153,7 @@ public class ICommentPostServiceImp implements ICommentPostService{
         return null;
     }
 
-    public int getnbrproduitVendus(Long idUser){
+    public int getnbrproduitVendus(String idUser){
         User user=userRepository.findById(idUser).orElse(null);
         List<Product>products=user.getProductListUser();
         List<CartLine>cartLines = new ArrayList<>();

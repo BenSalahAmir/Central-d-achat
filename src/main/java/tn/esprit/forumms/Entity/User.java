@@ -8,8 +8,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -19,20 +17,39 @@ import java.util.List;
 @NoArgsConstructor
 public class User implements Serializable {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long idUser;
+   // @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private String idUser;
+
     private String firstName;
+
     private String lastName;
+
+    private String username;
+
     private String email;
+
     private String password;
+
+    private String phonenumber;
+
     private String country;
+
     private String gouvernment;
+
     private boolean etat;
+
     private Long phone;
+
     private boolean disponibilite;
-    private int age ;
+
+    private int age;
+
     private  int nbrAvertissment ;
-private  boolean banned;
+
+    private  boolean banned;
+
+
+
 
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
@@ -43,8 +60,8 @@ private  boolean banned;
     private List<FavoriProduct> favoris ;
 
 
-    //@OneToMany(mappedBy = "userclaim")
-    //private List<Claim> claimList;
+    @OneToMany(mappedBy = "userclaim")
+    private List<Claim> claimList;
 
     @OneToMany(mappedBy = "userRating")
     private List<RatingProduct> ratingProductList;
@@ -74,12 +91,8 @@ private  boolean banned;
     List<CommentPost>commentList;
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles =new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<Facture> factureList;
+    @ManyToOne
+    private DeliveryCompany deliveryCompany;
 
-    @OneToMany(mappedBy = "userclaim")
-    private List<Claim> claimList;
 }

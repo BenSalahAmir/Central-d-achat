@@ -18,7 +18,7 @@ public class IProductServiceImp implements IProductService {
     public final UserRepository userRepository;
 
     @Override
-    public Product addProduct(Product product, long idUser, long idcomment) {
+    public Product addProduct(Product product, String idUser, long idcomment) {
         CommentPost c =commentPostRepository.findById(idcomment).orElse(null);
         User u =userRepository.findById(idUser).orElse(null);
         product.setComment(c);

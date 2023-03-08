@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.geo.Point;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -35,9 +36,5 @@ public class DeliveryMen implements Serializable {
     @JsonIgnore
     @ManyToOne
     public Adress adresslivreur ;
-    @JsonIgnore
-
-    @OneToMany
-    public List<Claim> claimList;
 
 }

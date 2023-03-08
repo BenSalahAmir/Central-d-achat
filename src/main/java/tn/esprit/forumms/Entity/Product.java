@@ -7,7 +7,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
 @ToString
 @Builder
 @Entity
@@ -24,19 +23,19 @@ public class Product implements Serializable {
     private Long quantityProduct;
     private String nameProduct;
     private String referenceProduct;
-    private String imageProduct;
+    //private String imageProduct;
+    private byte[] imageProduct;
     private float discountProduct;
     private String marqueProduct;
     @Temporal(TemporalType.DATE)
     private Date dateCreationProduct;
-
+    @JsonIgnore
     @ManyToOne
     private CategoryProduct categoryProduct;
 
     @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<RatingProduct> ratingProductList;
-
 
     @JsonIgnore
     @OneToMany(mappedBy = "product")
@@ -48,16 +47,18 @@ public class Product implements Serializable {
     @OneToOne
     private CommentPost comment;
 
-    @JsonIgnore
+    /*@JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     /*@JoinTable(
             name = "FavorisProduct",
             joinColumns = @JoinColumn(name = "idProduct"),
             inverseJoinColumns = @JoinColumn(name = "idFavori"))*/
-    private List<FavoriProduct> favoriProducts;
-
+    //private List<FavoriProduct> favoriProducts;
+    @JsonIgnore
     @ManyToOne
     private Sous_CategoryProduct sousCategorie;
 
+    @OneToMany(mappedBy = "product")
+    private List<FavoriProduct> favoriProducts;
 
 }

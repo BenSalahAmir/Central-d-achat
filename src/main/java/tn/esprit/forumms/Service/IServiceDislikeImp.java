@@ -24,7 +24,7 @@ public class IServiceDislikeImp implements IServiceDislike{
     public final CommentPostRepository commentPostRepository;
     @Transactional
     @Override
-    public DislikeComment addDislike(DislikeComment dislikeComment,Long idUser,Long idComment) {
+    public DislikeComment addDislike(DislikeComment dislikeComment,String idUser,Long idComment) {
         User user=userRepository.findById(idUser).orElse(null);
         CommentPost commentPost=commentPostRepository.findById(idComment).orElse(null);
         LikeComment likeComment=likeRepository.getLikeCommentByUserAndCommentPost(user,commentPost);
@@ -66,9 +66,9 @@ public class IServiceDislikeImp implements IServiceDislike{
 
     @Transactional
     @Override
-    public void deleteDislike(Long idDislike) {
+    public void deleteDislike(Long idDislike,String idUser) {
         DislikeComment dislikeComment=dislikeRepository.findById(idDislike).orElse(null);
-        if (dislikeComment!=null){
+        if (dislikeComment!=null&&dislikeComment.getUser().getIdUser().equals(idUser)){
             CommentPost commentPost=dislikeComment.getCommentPost();
             commentPost.setNbDisliked(commentPost.getNbDisliked()-1);
             dislikeRepository.deleteById(idDislike);

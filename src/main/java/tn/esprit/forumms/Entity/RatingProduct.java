@@ -1,10 +1,12 @@
 package tn.esprit.forumms.Entity;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
 @Builder
 @Entity
 @Getter
@@ -22,8 +24,6 @@ public class RatingProduct implements Serializable {
     @JsonIgnore
     private Product product ;
 
-
     @ManyToOne
     private User userRating;
-
 }

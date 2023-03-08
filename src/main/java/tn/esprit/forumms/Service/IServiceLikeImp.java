@@ -24,7 +24,7 @@ public class IServiceLikeImp implements IServiceLike{
     public final CommentPostRepository commentPostRepository;
     @Transactional
     @Override
-    public LikeComment addLike(LikeComment likeComment, Long idUser, Long idComment) {
+    public LikeComment addLike(LikeComment likeComment, String idUser, Long idComment) {
         User user=userRepository.findById(idUser).orElse(null);
         CommentPost commentPost=commentPostRepository.findById(idComment).orElse(null);
         DislikeComment dislikeComment=dislikeRepository.getDislikeCommentByUserAndCommentPost(user,commentPost);
@@ -65,9 +65,9 @@ public class IServiceLikeImp implements IServiceLike{
     }
     @Transactional
     @Override
-    public void Deletelike(Long idLike) {
+    public void Deletelike(Long idLike,String idUser) {
         LikeComment likeComment=likeRepository.findById(idLike).orElse(null);
-        if (likeComment!=null){
+        if (likeComment!=null&&likeComment.getUser().getIdUser().equals(idUser)){
             CommentPost commentPost=likeComment.getCommentPost();
             commentPost.setNbLiked(commentPost.getNbLiked()-1);
             likeRepository.deleteById(idLike);
