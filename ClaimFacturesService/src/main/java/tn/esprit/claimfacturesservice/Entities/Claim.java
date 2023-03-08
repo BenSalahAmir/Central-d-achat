@@ -1,16 +1,13 @@
 package tn.esprit.claimfacturesservice.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
-
+@Builder
 @Entity
 @Getter
 @Setter
@@ -30,7 +27,7 @@ public class Claim implements Serializable {
     @Enumerated(EnumType.STRING)
     private TypeClaim typeClaim;
 
-
+private String referencefacture;
     @JsonIgnore
     @ManyToOne
     private User userclaim;

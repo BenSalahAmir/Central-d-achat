@@ -89,7 +89,9 @@ public class FactureServiceImp implements FactureService {
     public List<Object[]> getFacturesDuringBlackFriday() throws ParseException {
         Date fd  = new SimpleDateFormat("dd-MM-yyyy").parse("23-11-2023");
         Date ld = new SimpleDateFormat("dd-MM-yyyy").parse("27-11-2023");
-
+        String message = "Vous avez effectué une réservation pendant le Black Friday donc vous allez profiter d'une réduction de 20%";
+        String message2 = "voici le prix avant reduction ";
+        String message3 = "voici le prix aprés reduction ";
         List<Facture> factures = factureRepo.findFacturesBetweenDates(fd,ld);
 
         List<Object[]> result = new ArrayList<>();
@@ -99,39 +101,40 @@ public class FactureServiceImp implements FactureService {
             Float discountedAmount = originalAmount * 0.8f; // 20% discount
             facture.setPriceTotal(discountedAmount); // update the amount in the facture object
             factureRepo.save(facture); // save the updated facture in the database
-            Object[] reservationData = {facture, originalAmount, discountedAmount};
-            result.add(reservationData);
+            Object[] factureData = {facture, message, message2, originalAmount, message3, discountedAmount};
+            result.add(factureData);
         }
         return result;
     }
 
-        @Scheduled(cron = "*/30 * * * * ?")
-    @Override
-    public void retrieveAndUpdateStatusFacture() {
+   @Scheduled(cron = "*/30 * * * * ?")
+   @Override
+   public void retrieveAndUpdateStatusFacture() {
+//
+//        // Archive all expired contracts
+//        this.archiveExpiredFacture();
+//
+//
+//        factureRepo.findByArchiveFalse().stream()
+//                // .filter(facture -> ChronoUnit.DAYS.between(LocalDate.now(),facture.getDatefacture()) < 30 )
+//                .forEach(facture ->
+//                        log.info(
+//                                "^Facture Id: " +facture.getIdFacture() +
+//                                        " de l'eutilisateur " + facture.getUser().getFirstName() + facture.getUser().getLastName() +
+//                                        " expirera aprés 15 jour de cette date " + facture.getDatefacture() +
+//                                        " / "+ ChronoUnit.DAYS.between(LocalDate.now(), facture.getDatefacture())
+//                        )
+//                );
+//
+   }
+//
+//    @Transactional
+//    public void archiveExpiredFacture() {
+//        factureRepo.findByArchiveFalseAndDatefacture(LocalDate.now())
+//                .stream()
+//                .forEach(facture -> facture.setArchive(true));
+//    }
 
-        // Archive all expired contracts
-        this.archiveExpiredFacture();
-
-
-        factureRepo.findByArchiveFalse().stream()
-                .filter(facture -> ChronoUnit.DAYS.between(LocalDate.now(),facture.getDatefacture()) < 30 )
-                .forEach(facture ->
-                        log.info(
-                                "Contrat num: " +facture.getIdFacture() +
-                                        " de l'etudiant " + facture.getUser().getFirstName() + facture.getUser().getLastName() +
-                                        " expirera aprés 15 jour de cette date " + facture.getDatefacture() +
-                                      " / "+ ChronoUnit.DAYS.between(LocalDate.now(), facture.getDatefacture())
-                        )
-                );
-    }
-
-    @Transactional
-    @Override
-    public void archiveExpiredFacture() {
-        factureRepo.findByArchiveFalseAndDatefacture(LocalDate.now())
-                .stream()
-                .forEach(facture -> facture.setArchive(true));
-/   }
 
 
 //    public Double convertirMontant(Double montant, String deviseOrigine, String deviseDestination) {

@@ -21,14 +21,17 @@ import java.util.Map;
 
 @RequestMapping("/claimFacture/claim")
 public class ClaimController {
-@Autowired
+    @Autowired
+    EmailService emailService;
+    @Autowired
     ClaimService claimService;
-   // "dateCreationClaim":"28/06/2023";
+    // "dateCreationClaim":"28/06/2023";
 
     @GetMapping("/hello")
-    public String hello(){
+    public String hello() {
         return ("hello claimFacture");
     }
+
     @PostMapping()
     public Claim addClaim(@RequestBody Claim claim) {
         return claimService.addClaim(claim);
@@ -37,45 +40,59 @@ public class ClaimController {
 
     @PutMapping()
     public Claim UpdateClaim(@RequestBody Claim claim) {
-        return	claimService.UpdateClaim(claim);
+        return claimService.UpdateClaim(claim);
     }
 
 
     @PutMapping("/{id}/{newStatut}")
-    public Claim UpdateClaimStatut(@PathVariable Long id,@PathVariable StatusClaim newStatut) {
-        return	claimService.UpdateClaimStatut(id,newStatut);
+    public Claim UpdateClaimStatut(@PathVariable Long id, @PathVariable StatusClaim newStatut) {
+        return claimService.UpdateClaimStatut(id, newStatut);
     }
 
 
     @GetMapping("/{id}")
-    public Claim retrieveclaimById(@PathVariable Long id ) {
-        return	claimService.retrieveclaimById(id);
+    public Claim retrieveclaimById(@PathVariable Long id) {
+        return claimService.retrieveclaimById(id);
     }
 
     @GetMapping()
     public List<Claim> retrieveAllclaim() {
-        return	claimService.retrieveAllclaim();
+        return claimService.retrieveAllclaim();
     }
 
     @DeleteMapping("/{id}")
     public Boolean DeleteClaim(@PathVariable Long id) {
-        return	claimService.DeleteClaim(id);
+        return claimService.DeleteClaim(id);
     }
 
 
-    @GetMapping("/date/{Idclaim}/{Iddelivery}")
-    public boolean DateValideClaim(@PathVariable Long Idclaim , @PathVariable Long Iddelivery){
-
-        return claimService.DateValideClaim( Idclaim ,  Iddelivery);
+    @PostMapping("/date/{Idclaim}/{Iddelivery}")
+    public boolean DateValideClaim(@PathVariable Long Idclaim, @PathVariable Long Iddelivery, @RequestBody MailRequest request) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("Name", request.getName());
+        model.put("location", "Tunis,Tunisie");
+        return claimService.DateValideClaim(Idclaim, Iddelivery);
     }
+
     @GetMapping("/isowner/{Idclaim}")
-    public boolean Isowner(@PathVariable Long Idclaim ){
-        return claimService.isOwner( Idclaim);
+    public boolean Isowner(@PathVariable Long Idclaim) {
+        return claimService.isOwner(Idclaim);
+    }
+
+    @GetMapping("/IsPurchase/{refProduct}/{idUser}")
+    public ResponseEntity<String> IsPurchase(@PathVariable String refProduct, @PathVariable Long idUser) {
+        return ResponseEntity.ok(claimService.isPurchase(refProduct, idUser));
+
     }
 
     @PutMapping("/bann/{id}")
-    public void bann(@PathVariable Long id ) {
+    public void bann(@PathVariable Long id) {
         claimService.banUser(id);
+    }
+
+    @PostMapping("/claimvalid/{invoiceNumber}")
+    public ResponseEntity<String> claimvalid(@RequestBody Claim claim, @PathVariable String invoiceNumber) {
+       return ResponseEntity.ok(claimService.isClaimValid(claim, invoiceNumber));
     }
 
 
@@ -100,7 +117,8 @@ public class ClaimController {
 
 
 
-  // @PostMapping("/{claimId}/{invoiceNumber}")
+
+    // @PostMapping("/{claimId}/{invoiceNumber}")
 //  public void isClaimValid (@PathVariable Long claimId ,@PathVariable String invoiceNumber)  {
 //      claimService.isClaimValid(claimId,invoiceNumber);
 //   }

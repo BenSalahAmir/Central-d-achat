@@ -13,7 +13,7 @@ import static org.hibernate.loader.Loader.SELECT;
 public interface CartLineRepository extends JpaRepository<CartLine,Long> {
     @Query("SELECT DISTINCT cl.product.idProduct FROM CartLine cl WHERE cl.cart.cartStatus = 'CONFIRMED'")
     List<Long> findOrderedProductIds();
-
+//cartline teb3a fournisseur 1
 
     @Query("SELECT cartl FROM CartLine cartl WHERE cartl.cart.cartStatus='CONFIRMED' and cartl.cart.user.idUser= :userId")
     List<CartLine> getss(Long userId);

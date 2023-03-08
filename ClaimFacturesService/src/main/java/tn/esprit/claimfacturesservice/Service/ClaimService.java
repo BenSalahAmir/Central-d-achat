@@ -17,7 +17,7 @@ public interface ClaimService {
     public boolean isOwner(long idclaim);
     public Boolean DateValideClaim(Long Idclaim, Long Iddelivery);
 
-    public void isClaimValid(Long claimId, String invoiceNumber) ;
+    public String isClaimValid(Claim claim, String invoiceNumber) ;
     public void banUser(Long supplierId);
 
 

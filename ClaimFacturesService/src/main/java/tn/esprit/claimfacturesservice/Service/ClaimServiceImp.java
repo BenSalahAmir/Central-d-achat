@@ -1,38 +1,55 @@
 package tn.esprit.claimfacturesservice.Service;
 
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import tn.esprit.claimfacturesservice.Entities.*;
 import tn.esprit.claimfacturesservice.Repository.*;
 import tn.esprit.claimfacturesservice.dtoEntities.MailRequest;
+import tn.esprit.claimfacturesservice.dtoEntities.MailResponse;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
+@AllArgsConstructor
 @Service
 @Slf4j
 public class ClaimServiceImp implements ClaimService {
     @Autowired
-    ClaimRepo claimRepo;
-    @Autowired
-    ProductRepository productRepo;
+    private JavaMailSender sender;
 
     @Autowired
-    CartLineRepository cartLineRepository;
-    @Autowired
-    UserRepository userRepo;
-    @Autowired
-    FactureRepository factureRepo;
-    @Autowired
-    DeliveryRepository deliveryRepository;
-    @Autowired
-    EmailService emailService;
+    private Configuration config;
+    private final ClaimRepo claimRepo;
+
+    private final ProductRepository productRepo;
+
+
+    private final CartLineRepository cartLineRepository;
+
+    private final  UserRepository userRepo;
+
+    private final  FactureRepository factureRepo;
+
+    private final DeliveryRepository deliveryRepository;
+
+    private final EmailService emailService;
 
 
     @Override
@@ -41,6 +58,7 @@ public class ClaimServiceImp implements ClaimService {
         claim.setStatusClaim(StatusClaim.NONTRAITE);
         return claimRepo.save(claim);
     }
+
 
     @Override
     public Claim UpdateClaim(Claim claim) {
@@ -103,9 +121,10 @@ public class ClaimServiceImp implements ClaimService {
                             List<Product> products = new ArrayList<>();
                             products.add(cartLine.getProduct());
                             for (Product product : products) {
-                                if (product.getReferenceProduct() == refProduct) {
-                                    return ("this product" + product.getNameProduct() + " has been purchased by the user " + user.getFirstName() + user.getLastName());
+                                if (product.getReferenceProduct() != refProduct) {
                                 }
+                                return ("this product"+ " " + product.getNameProduct() +" "+ " has been purchased by the user "+ " " + user.getFirstName() + " " + user.getLastName());
+
                             }
                         }
                     }
@@ -123,18 +142,18 @@ public class ClaimServiceImp implements ClaimService {
         float res = (diff / (1000 * 60 * 60 * 24));
       if(delivery != null && claim!=null ){
         if (res >= 3 && (claimDate.after(deliveryDate))) {
-              //return (true +""+ res);
-            String to = "<eyazidi2640@gmail.com>";
-            String from = "<zidieya29310@gmail.com>";
-            String subject = "Claim not valid";
-            String message = "Your claim with ID " + Idclaim + " is not valid. Please contact us for more information.";
-            Map<String, Object> model = new HashMap<>();
-            model.put("message", message);
-            MailRequest request = new MailRequest();
-            request.setTo(to);
-            request.setFrom(from);
-            request.setSubject(subject);
-            emailService.sendEmail(request, model);
+             // return (true +""+ res);
+//            String to = "<eyazidi2640@gmail.com>";
+//            String from = "<zidieya29310@gmail.com>";
+//            String subject = "Claim not valid";
+//            String message = "Your claim with ID " + Idclaim + " is not valid. Please contact us for more information.";
+//            Map<String, Object> model = new HashMap<>();
+//            model.put("message", message);
+//            MailRequest request = new MailRequest();
+////            request.setTo(to);
+////            request.setFrom(from);
+////            request.setSubject(subject);
+//  this.sendEmail(request, model);
 
             return false;
         }
@@ -145,27 +164,59 @@ public class ClaimServiceImp implements ClaimService {
     }
 
     @Override
-    public void isClaimValid(Long claimId, String invoiceNumber) {
-        Claim claim = claimRepo.findById(claimId).orElse(null);
+    public String isClaimValid(Claim claim, String invoiceNumber) {
+        long claimId= claimRepo.save(claim).getIdClaim();
+       // Claim claim = claimRepo.findById(claimId).orElse(null);
         Facture facture = factureRepo.findByReference(invoiceNumber);
+        long iddelivery = facture.getDelivery().getId_Delivery();
+        log.info("temchi0");
+
+
         DeliveryMen men = factureRepo.findByReference(invoiceNumber).getDelivery().getDeliveryMen();
 
         // if (facture != null && facture.getClaims().equals(claim)) {
         if (claim.getCategoryClaim().equals(CategoryClaim.PRODUCTCLAIM)) {
 
-            if (DateValideClaim(claimId, facture.getDelivery().getId_Delivery()) && isOwner(claimId)) {
-                claimRepo.save(claim);
-            }
+            if (DateValideClaim(claimId, iddelivery) && isOwner(claimId)) {
+
+
+                claimRepo.save(claim); return ("saved") ;
+            } else { claimRepo.delete(claim);  return ("deleted");}
+
+
         } else if (claim.getCategoryClaim().equals(CategoryClaim.DELIVERYCLAIM)) {
             claim.setDeliveryMen(men);
             claimRepo.save(claim);
+            return ("saved");
         }
 
         else if (claim.getCategoryClaim().equals(CategoryClaim.SERVICECLAIM))
             claimRepo.save(claim);
 
         else claimRepo.delete(claim);
+        return ("claim saved");
     }
+
+
+    public int getnbrproduitVendus(Long idUser){
+        User user=userRepo.findById(idUser).orElse(null);
+        List<Product>products=user.getProductListUser();
+        List<CartLine>cartLines = new ArrayList<>();
+        int productsSold=0;
+        for (Product product:products) {
+            for (CartLine cartLine:product.getCartLines()) {
+                Objects.requireNonNull(cartLines).add(cartLine);
+            }
+        }
+
+        for (CartLine cartLine: Objects.requireNonNull(cartLines)) {
+            if (cartLine.getCart().getCartStatus().equals(CartStatus.CONFIRMED)){
+                productsSold=productsSold+cartLine.getQuantity();
+            }
+        }
+        return productsSold;
+    }
+
 
     @Override
     @Transactional
@@ -173,9 +224,9 @@ public class ClaimServiceImp implements ClaimService {
         User user=userRepo.findById(supplierId).orElse(null);
         List<Claim> claims  = user.getClaimList();
         System.out.println("user claim "+user.getClaimList());
-        List<CartLine> cartLines=cartLineRepository.getss(supplierId);
 
-        int nbcart= cartLines.size();
+
+        int nbcart= getnbrproduitVendus( supplierId);
         int nbclaims =claims.size();
        if(nbcart> 0){
          if (nbclaims >= (nbcart*20)/100){
@@ -186,12 +237,12 @@ public class ClaimServiceImp implements ClaimService {
                     user.setNbrAvertissment(nba);
                     userRepo.save(user);
 
-                 log.info("user claimed");
+                 System.out.println("cc");
              }else {
                  user.setBanned(true);
                  userRepo.save(user);
+                 System.out.println("User Banned");
 
-                 log.info("User Banned");
              }
 
           }
@@ -199,7 +250,36 @@ public class ClaimServiceImp implements ClaimService {
     }
 
 
-//naml sch n geti les fnct w n9olou kol claim chnou hkeyetha
+
+public MailResponse sendEmail(MailRequest request, Map<String, Object> model) {
+    MailResponse response = new MailResponse();
+    MimeMessage message = sender.createMimeMessage();
+    try {
+        // set mediaType
+        MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                StandardCharsets.UTF_8.name());
+        // add attachment
+        helper.addAttachment("logo.png", new ClassPathResource("logo.png"));
+
+        Template t = config.getTemplate("email-template.ftl");
+        String html = FreeMarkerTemplateUtils.processTemplateIntoString(t, model);
+
+        helper.setTo(request.getTo());
+        helper.setText(html, true);
+        helper.setSubject(request.getSubject());
+        helper.setFrom(request.getFrom());
+        sender.send(message);
+
+        response.setMessage("mail send to : " + request.getTo());
+        response.setStatus(Boolean.TRUE);
+
+    } catch (MessagingException | IOException | TemplateException e) {
+        response.setMessage("Mail Sending failure : "+e.getMessage());
+        response.setStatus(Boolean.FALSE);
+    }
+
+    return response;
+}
 
 
 }

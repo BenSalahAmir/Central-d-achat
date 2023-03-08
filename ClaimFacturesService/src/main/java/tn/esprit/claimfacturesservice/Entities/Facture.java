@@ -1,17 +1,14 @@
 package tn.esprit.claimfacturesservice.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
-
+@Builder
 @Entity
 @Getter
 @Setter
@@ -26,7 +23,6 @@ public class Facture implements Serializable {
     private String reference;
     private float priceTotal;
     private Date datefacture ;
-    private String devise;
     @JsonIgnore
     @OneToOne
     private FactureAvoir factureAvoir;
