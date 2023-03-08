@@ -18,25 +18,21 @@ public class FactureAvoirController {
     @Autowired
     FacturAvoirService FacturAvoirService;
     @PostMapping()
-    public FactureAvoir factureAvoir(@RequestBody FactureAvoir factureAvoir) {
-        return FacturAvoirService.addFactureAvoir(factureAvoir);
+    public FactureAvoirDto factureAvoir(@RequestBody FactureAvoirDto factureAvoirDto) {
+        return FacturAvoirService.addFactureAvoir(factureAvoirDto);
     }
 
-//    @PostMapping()
-//    public FactureAvoirDto factureAvoir(@RequestBody FactureAvoirDto factureAvoirDto) {
-//        return (FactureAvoirDto)FacturAvoirService.addFactureAvoir(factureAvoirDto);
-//    }
     @PutMapping()
-    public FactureAvoir UpdateFacture(@RequestBody FactureAvoir factureAvoir) {
-        return	FacturAvoirService.UpdateFactureAvoir(factureAvoir);
+    public FactureAvoirDto UpdateFacture(@RequestBody FactureAvoirDto factureAvoirDto) {
+        return	FacturAvoirService.UpdateFactureAvoir(factureAvoirDto);
     }
     @GetMapping("/{id}")
-    public FactureAvoir retrieveFactureById(@PathVariable Long id ) {
+    public FactureAvoirDto retrieveFactureById(@PathVariable Long id ) {
         return	FacturAvoirService.retrieveFactureAvoirById(id);
     }
 
     @GetMapping()
-    public List<FactureAvoir> retrieveAllFactureAvoir() {
+    public List<FactureAvoirDto> retrieveAllFactureAvoir() {
         return	FacturAvoirService.retrieveAllFactureAvoir();
     }
     @DeleteMapping("/{id}")

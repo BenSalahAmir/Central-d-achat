@@ -35,20 +35,7 @@ public class FactureServiceImp implements FactureService {
 //        facture.getDelivery().setDeliveryPrice(montantConverti);
         return factureRepo.save(facture);
     }
-//    public double convertirMontant(double montant, String deviseDestination) {
-//        TauxDEchange tauxDeChange = (TauxDEchange) tauxdechangeRepository.findByDeviseOrigineAndDeviseDestination("DNT", deviseDestination);
-//        if (tauxDeChange == null) {
-//            throw new IllegalArgumentException("Aucun taux de change n'a été trouvé pour la devise de destination spécifiée.");
-//        }
-//        return montant * tauxDeChange.getTaux();
-//    }
 
-//    public Double convertirMontantd(Double montant, String deviseOrigine, String deviseDestination) {
-//        Devise deviseOrigineObj = deviseRepository.findByCode(deviseOrigine);
-//        Devise deviseDestinationObj = deviseRepository.findByCode(deviseDestination);
-//
-//        return montant * deviseOrigineObj.getTaux() / deviseDestinationObj.getTaux();
-//    }
     @Override
     public Facture UpdateFacture(Facture facture) {
         return  factureRepo.save(facture);
@@ -144,6 +131,19 @@ public class FactureServiceImp implements FactureService {
 //        return montant * deviseOrigineObj.getTaux() / deviseDestinationObj.getTaux();
 //    }
 //
+//    public double convertirMontant(double montant, String deviseDestination) {
+//        TauxDEchange tauxDeChange = (TauxDEchange) tauxdechangeRepository.findByDeviseOrigineAndDeviseDestination("DNT", deviseDestination);
+//        if (tauxDeChange == null) {
+//            throw new IllegalArgumentException("Aucun taux de change n'a été trouvé pour la devise de destination spécifiée.");
+//        }
+//        return montant * tauxDeChange.getTaux();
+//    }
 
+//    public Double convertirMontantd(Double montant, String deviseOrigine, String deviseDestination) {
+//        Devise deviseOrigineObj = deviseRepository.findByCode(deviseOrigine);
+//        Devise deviseDestinationObj = deviseRepository.findByCode(deviseDestination);
+//
+//        return montant * deviseOrigineObj.getTaux() / deviseDestinationObj.getTaux();
+//    }
 }
 
