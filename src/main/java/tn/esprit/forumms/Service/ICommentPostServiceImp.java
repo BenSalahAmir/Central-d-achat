@@ -3,10 +3,7 @@ package tn.esprit.forumms.Service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import tn.esprit.forumms.Entity.CommentPost;
-import tn.esprit.forumms.Entity.Post;
-import tn.esprit.forumms.Entity.Product;
-import tn.esprit.forumms.Entity.User;
+import tn.esprit.forumms.Entity.*;
 import tn.esprit.forumms.Repository.CommentPostRepository;
 import tn.esprit.forumms.Repository.PostRepository;
 import tn.esprit.forumms.Repository.ProductRepository;
@@ -156,6 +153,24 @@ public class ICommentPostServiceImp implements ICommentPostService{
         return null;
     }
 
+    public int getnbrproduitVendus(Long idUser){
+        User user=userRepository.findById(idUser).orElse(null);
+        List<Product>products=user.getProductListUser();
+        List<CartLine>cartLines = new ArrayList<>();
+        int productsSold=0;
+        for (Product product:products) {
+                for (CartLine cartLine:product.getCartLines()) {
+                    Objects.requireNonNull(cartLines).add(cartLine);
+                }
+        }
+
+        for (CartLine cartLine: Objects.requireNonNull(cartLines)) {
+            if (cartLine.getCart().getCartStatus().equals(CartStatus.CONFIRMED)){
+                productsSold=productsSold+cartLine.getQuantity();
+            }
+        }
+        return productsSold;
+    }
     @Override
     public List<CommentPost> getCommentsSortedByAverage(Long idPost) {
         Post post=postRepository.findById(idPost).orElse(null);
@@ -164,7 +179,7 @@ public class ICommentPostServiceImp implements ICommentPostService{
             Comparator<CommentPost> score = Comparator.comparingDouble(c -> {
                 double likes = Optional.ofNullable(c.getNbLiked()).orElse(0L);
                 double dislikes = Optional.ofNullable(c.getNbDisliked()).orElse(0L);
-                double produitVendus = Optional.of((long) c.getUserComment().getProductListUser().size()).orElse(0L);
+                double produitVendus = Optional.of((long) getnbrproduitVendus(c.getUserComment().getIdUser())).orElse(0L);
                 double claimsnbr = Optional.of((long) c.getUserComment().getClaimList().size()).orElse(0L);
                 return (likes - dislikes)*30+produitVendus*30-claimsnbr*40 / 100.0;
             });
