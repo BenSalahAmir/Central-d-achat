@@ -181,7 +181,7 @@ public class ICommentPostServiceImp implements ICommentPostService{
                 double dislikes = Optional.ofNullable(c.getNbDisliked()).orElse(0L);
                 double produitVendus = Optional.of((long) getnbrproduitVendus(c.getUserComment().getIdUser())).orElse(0L);
                 double claimsnbr = Optional.of((long) c.getUserComment().getClaimList().size()).orElse(0L);
-                return (likes - dislikes)*30+produitVendus*30-claimsnbr*40 / 100.0;
+                return (likes - dislikes)*20+produitVendus*30-claimsnbr*50 / 100.0;
             });
 
             return comments.stream()
