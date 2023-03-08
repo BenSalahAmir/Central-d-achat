@@ -4,18 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import tn.esprit.claimfacturesservice.Entities.Devise;
 import tn.esprit.claimfacturesservice.Entities.Facture;
-import tn.esprit.claimfacturesservice.Entities.TauxDEchange;
-import tn.esprit.claimfacturesservice.Repository.DeviseRepository;
 import tn.esprit.claimfacturesservice.Repository.FactureRepository;
-import tn.esprit.claimfacturesservice.Repository.TauxdechangeRepository;
 
-import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,10 +17,6 @@ import java.util.List;
 public class FactureServiceImp implements FactureService {
     @Autowired
      FactureRepository factureRepo;
-    @Autowired
-    private DeviseRepository deviseRepository;
-    @Autowired
-    private TauxdechangeRepository tauxdechangeRepository;
    @Override
     public Facture addFacture(Facture facture) {
 //        Double montantConverti = convertirMontant(facture.getDelivery().getDeliveryPrice(), " DNT", facture.getDevise());

@@ -66,11 +66,9 @@ public class ClaimController {
     }
 
 
-    @PostMapping("/date/{Idclaim}/{Iddelivery}")
-    public boolean DateValideClaim(@PathVariable Long Idclaim, @PathVariable Long Iddelivery, @RequestBody MailRequest request) {
-        Map<String, Object> model = new HashMap<>();
-        model.put("Name", request.getName());
-        model.put("location", "Tunis,Tunisie");
+    @GetMapping("/date/{Idclaim}/{Iddelivery}")
+    public boolean DateValideClaim(@PathVariable Long Idclaim, @PathVariable Long Iddelivery) {
+
         return claimService.DateValideClaim(Idclaim, Iddelivery);
     }
 
@@ -80,14 +78,15 @@ public class ClaimController {
     }
 
     @GetMapping("/IsPurchase/{refProduct}/{idUser}")
-    public ResponseEntity<String> IsPurchase(@PathVariable String refProduct, @PathVariable Long idUser) {
+    public ResponseEntity<String> IsPurchase(@PathVariable String refProduct,
+                                             @PathVariable String idUser) {
         return ResponseEntity.ok(claimService.isPurchase(refProduct, idUser));
 
     }
 
     @PutMapping("/bann/{id}")
-    public void bann(@PathVariable Long id) {
-        claimService.banUser(id);
+    public String bann(@PathVariable String id) {
+        return claimService.banUser(id);
     }
 
     @PostMapping("/claimvalid/{invoiceNumber}")

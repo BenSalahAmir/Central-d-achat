@@ -20,7 +20,8 @@ public class Post implements Serializable {
     private Long idPost;
     private String topicPost;
     private String descriptionPost;
-    private String imagePost;
+    @Lob
+    private byte[] imagePost;
     @Temporal(TemporalType.DATE)
     private Date dateCreationPost;
 

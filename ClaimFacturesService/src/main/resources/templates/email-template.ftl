@@ -19,16 +19,12 @@
 							</div>
 							
 							<div style="font-size: 24px; color: #555100;">
-								<br> Sending Email using Spring Boot with <b>FreeMarker
-									template !!! <br>
+								<br> Sending Email using Spring Boot BY <b>
+									Shopp'ini !!! <br>
 							</div>
 							<div>
-								<br> Java Techie is a channel where we create and publish
-								videos on<br> 'how to' about latest technology trends like<br>
-								spring ,spring boot ,hibernate , web services and micro service
-								<br> ""This channel is created to share the knowledge and
-								to gain the knowledge"<br>
-								<br>"Sharing the knowledge is biggest learning" <br> <br>
+								<br> YOU ARE BLOCKER cause you are cross the line of claims <br>
+								<br>"you stll blocked until you resolve the probléme with the ADMIN" <br> <br>
 								<br> <br> <b>${Name}</b><br>${location}<br>
 								<br>
 							</div>

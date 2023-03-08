@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 public class DeliveryCompany implements Serializable {
     @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_company ;
     private String nameCompany ;
     private String emailCompany ;
@@ -29,7 +29,8 @@ public class DeliveryCompany implements Serializable {
     @OneToMany(mappedBy = "deliveryCompany")
     public List<DeliveryMen>deliveryMen;
 
-
+    @OneToMany(mappedBy = "deliveryCompany")
+    private List<User>userrepresentative;
 
 
 }

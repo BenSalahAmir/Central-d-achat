@@ -17,20 +17,17 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class FactureAvoirIMP implements FacturAvoirService {
-    FactureAvoirDto factureAvoirDto;
 
     @Autowired
     FactureAvoirRepository factureAvoirRepository;
     @Override
-    public FactureAvoirDto addFactureAvoir(FactureAvoirDto factureAvoirDto) {
-        FactureAvoir factureAvoir =factureAvoirRepository.save(FactureAvoirMapper.mapFactureAvoirDtoToEntity(factureAvoirDto));
-        return FactureAvoirMapper.mapFactureAvoirToDto(factureAvoir);
+    public FactureAvoir addFactureAvoir(FactureAvoir factureAvoir) {
+        return factureAvoirRepository.save(factureAvoir);
     }
 
     @Override
-    public FactureAvoirDto UpdateFactureAvoir(FactureAvoirDto factureAvoirDto) {
-        FactureAvoir factureAvoir =factureAvoirRepository.save(FactureAvoirMapper.mapFactureAvoirDtoToEntity(factureAvoirDto));
-        return FactureAvoirMapper.mapFactureAvoirToDto(factureAvoir);
+    public FactureAvoir UpdateFactureAvoir(FactureAvoir factureAvoir) {
+        return factureAvoirRepository.save(factureAvoir);
     }
 
     @Override
@@ -44,16 +41,57 @@ public class FactureAvoirIMP implements FacturAvoirService {
     }
 
     @Override
-    public FactureAvoirDto retrieveFactureAvoirById(Long id) {
-        FactureAvoir factureAvoir =factureAvoirRepository.findById(id).orElse(null);
-        return FactureAvoirMapper.mapFactureAvoirToDto(factureAvoir);
+    public FactureAvoir retrieveFactureAvoirById(Long id) {
+        return factureAvoirRepository.findById(id).orElse(null);
     }
 
     @Override
-    public List<FactureAvoirDto> retrieveAllFactureAvoir() {
-
-        return factureAvoirRepository.findAll().stream().
-                map(factureAvoir -> FactureAvoirMapper.mapFactureAvoirToDto(factureAvoir))
-                .collect(Collectors.toList());
+    public List<FactureAvoir> retrieveAllFactureAvoir() {
+        return factureAvoirRepository.findAll();
     }
+
+
+
+
+//
+//    private final
+//    FactureAvoirDto factureAvoirDto;
+//
+//    @Autowired
+//    FactureAvoirRepository factureAvoirRepository;
+//    @Override
+//    public FactureAvoirDto addFactureAvoir(FactureAvoirDto factureAvoirDto) {
+//        FactureAvoir factureAvoir =factureAvoirRepository.save(FactureAvoirMapper.mapFactureAvoirDtoToEntity(factureAvoirDto));
+//        return FactureAvoirMapper.mapFactureAvoirToDto(factureAvoir);
+//    }
+//
+//    @Override
+//    public FactureAvoirDto UpdateFactureAvoir(FactureAvoirDto factureAvoirDto) {
+//        FactureAvoir factureAvoir =factureAvoirRepository.save(FactureAvoirMapper.mapFactureAvoirDtoToEntity(factureAvoirDto));
+//        return FactureAvoirMapper.mapFactureAvoirToDto(factureAvoir);
+//    }
+//
+//    @Override
+//    public Boolean DeleteFactureAvoir(Long id) {
+//        if (factureAvoirRepository.existsById(id)) {
+//            factureAvoirRepository.deleteById(id);
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+//
+//    @Override
+//    public FactureAvoirDto retrieveFactureAvoirById(Long id) {
+//        FactureAvoir factureAvoir =factureAvoirRepository.findById(id).orElse(null);
+//        return FactureAvoirMapper.mapFactureAvoirToDto(factureAvoir);
+//    }
+//
+//    @Override
+//    public List<FactureAvoirDto> retrieveAllFactureAvoir() {
+//
+//        return factureAvoirRepository.findAll().stream().
+//                map(factureAvoir -> FactureAvoirMapper.mapFactureAvoirToDto(factureAvoir))
+//                .collect(Collectors.toList());
+//    }
 }

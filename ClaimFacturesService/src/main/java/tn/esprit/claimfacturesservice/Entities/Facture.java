@@ -8,12 +8,14 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
-@Builder
+
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+
 public class Facture implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -23,6 +25,7 @@ public class Facture implements Serializable {
     private String reference;
     private float priceTotal;
     private Date datefacture ;
+    //private String devise;
     @JsonIgnore
     @OneToOne
     private FactureAvoir factureAvoir;
@@ -39,4 +42,3 @@ public class Facture implements Serializable {
     @OneToOne(mappedBy = "facture")
     private Delivery delivery;
 }
-

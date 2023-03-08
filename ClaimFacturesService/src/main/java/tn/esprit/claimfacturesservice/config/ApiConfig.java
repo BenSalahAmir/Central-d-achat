@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
+import tn.esprit.claimfacturesservice.dtoEntities.FactureAvoirDto;
 
 @Configuration
 public class ApiConfig {
@@ -15,5 +16,10 @@ public class ApiConfig {
         bean.setTemplateLoaderPath("classpath:/templates");
         return bean;
     }
+
+
+
+
+
 
 }

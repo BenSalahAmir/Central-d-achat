@@ -18,10 +18,10 @@ public interface ClaimService {
     public Boolean DateValideClaim(Long Idclaim, Long Iddelivery);
 
     public String isClaimValid(Claim claim, String invoiceNumber) ;
-    public void banUser(Long supplierId);
+    public String banUser(String supplierId);
 
 
-   public String isPurchase(String refProduct , Long idUser);
+   public String isPurchase(String refProduct , String idUser);
 //   public boolean isFraudulentComplaint(Claim claim);
 
    // public void createClaim(Long supplierId);

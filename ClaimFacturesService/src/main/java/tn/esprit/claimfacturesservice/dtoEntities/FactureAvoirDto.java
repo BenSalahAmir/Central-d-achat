@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import tn.esprit.claimfacturesservice.Entities.Facture;
 
-import javax.persistence.OneToOne;
+
 import java.io.Serializable;
 
 @Builder

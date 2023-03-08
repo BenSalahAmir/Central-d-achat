@@ -22,7 +22,7 @@ public class ClaimDto implements Serializable {
     private  final Date dateCreationClaim;
     private final CategoryClaim categoryClaim;
     private final StatusClaim statusClaim;
-    private final TypeClaim typeClaim;
+
     private final User userclaim;
     private  final Facture facture;
     private final   DeliveryMen deliveryMen;

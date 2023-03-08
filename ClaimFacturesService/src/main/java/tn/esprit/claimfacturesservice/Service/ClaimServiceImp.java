@@ -103,7 +103,7 @@ public class ClaimServiceImp implements ClaimService {
             return false;
    }return false ;
     }
-    public String isPurchase(String refProduct, Long idUser) {
+    public String isPurchase(String refProduct, String idUser) {
         User user = userRepo.findById(idUser).orElse(null);
         List<Facture> factures = user.getFactureList();
         Product productRef = productRepo.findByReferenceProduct(refProduct);
@@ -124,7 +124,7 @@ public class ClaimServiceImp implements ClaimService {
                                 if (product.getReferenceProduct() != refProduct) {
                                 }
                                 return ("this product"+ " " + product.getNameProduct() +" "+ " has been purchased by the user "+ " " + user.getFirstName() + " " + user.getLastName());
-
+//                                return ("this product Savon with reference 147m has been purchased by the Eya zidi ");
                             }
                         }
                     }
@@ -143,17 +143,6 @@ public class ClaimServiceImp implements ClaimService {
       if(delivery != null && claim!=null ){
         if (res >= 3 && (claimDate.after(deliveryDate))) {
              // return (true +""+ res);
-//            String to = "<eyazidi2640@gmail.com>";
-//            String from = "<zidieya29310@gmail.com>";
-//            String subject = "Claim not valid";
-//            String message = "Your claim with ID " + Idclaim + " is not valid. Please contact us for more information.";
-//            Map<String, Object> model = new HashMap<>();
-//            model.put("message", message);
-//            MailRequest request = new MailRequest();
-////            request.setTo(to);
-////            request.setFrom(from);
-////            request.setSubject(subject);
-//  this.sendEmail(request, model);
 
             return false;
         }
@@ -187,7 +176,7 @@ public class ClaimServiceImp implements ClaimService {
         } else if (claim.getCategoryClaim().equals(CategoryClaim.DELIVERYCLAIM)) {
             claim.setDeliveryMen(men);
             claimRepo.save(claim);
-            return ("saved");
+            return ("claim saved with affect a claim to deliveryMen ");
         }
 
         else if (claim.getCategoryClaim().equals(CategoryClaim.SERVICECLAIM))
@@ -198,7 +187,7 @@ public class ClaimServiceImp implements ClaimService {
     }
 
 
-    public int getnbrproduitVendus(Long idUser){
+    public int getnbrproduitVendus(String idUser){
         User user=userRepo.findById(idUser).orElse(null);
         List<Product>products=user.getProductListUser();
         List<CartLine>cartLines = new ArrayList<>();
@@ -220,7 +209,7 @@ public class ClaimServiceImp implements ClaimService {
 
     @Override
     @Transactional
-    public void banUser(Long supplierId) {
+    public String banUser(String supplierId) {
         User user=userRepo.findById(supplierId).orElse(null);
         List<Claim> claims  = user.getClaimList();
         System.out.println("user claim "+user.getClaimList());
@@ -228,25 +217,26 @@ public class ClaimServiceImp implements ClaimService {
 
         int nbcart= getnbrproduitVendus( supplierId);
         int nbclaims =claims.size();
-       if(nbcart> 0){
-         if (nbclaims >= (nbcart*20)/100){
+       if(nbcart > 0){
+         if (nbclaims <= (nbcart*20)/100){
              int nba= user.getNbrAvertissment();
              if (nba <3){
                  //mail tanbih
                     nba++;
+                    log.info("user have "+ nba + "avertissment");
                     user.setNbrAvertissment(nba);
                     userRepo.save(user);
+                 return("user have "+ nba + "avertissment");
 
-                 System.out.println("cc");
              }else {
                  user.setBanned(true);
                  userRepo.save(user);
                  System.out.println("User Banned");
 
-             }
+             }return("user is banned");
 
           }
-       }
+       }return("user didn't have a lot of claim");
     }
 
 

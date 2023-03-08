@@ -1,5 +1,6 @@
 package tn.esprit.claimfacturesservice.Entities;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -24,10 +25,11 @@ public class Claim implements Serializable {
     private CategoryClaim categoryClaim;
     @Enumerated(EnumType.STRING)
     private StatusClaim statusClaim;
-    @Enumerated(EnumType.STRING)
-    private TypeClaim typeClaim;
+    private String referencefacture;
 
-private String referencefacture;
+
+
+
     @JsonIgnore
     @ManyToOne
     private User userclaim;
@@ -37,5 +39,5 @@ private String referencefacture;
     private Facture facture;
 
     @ManyToOne()
-private  DeliveryMen deliveryMen;
+    private  DeliveryMen deliveryMen;
 }

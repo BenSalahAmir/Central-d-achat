@@ -33,16 +33,17 @@ public class CommentPost implements Serializable {
     private User userComment;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "comment")
+    @OneToOne(mappedBy = "comment",cascade = CascadeType.ALL)
     private Product productForum;
 
 
     @JsonIgnore
-    @OneToMany(mappedBy = "commentPost")
+    @OneToMany(mappedBy = "commentPost",cascade = CascadeType.ALL)
     private List<LikeComment> likeComments ;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "commentPost")
+    @OneToMany(mappedBy = "commentPost",cascade = CascadeType.ALL)
     private List<DislikeComment> dislikeComments ;
+
 
 }
