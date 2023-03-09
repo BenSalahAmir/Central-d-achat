@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-
 @Entity
 @Getter
 @Setter
@@ -31,7 +30,7 @@ public class Post implements Serializable {
     private CategoryProduct categoryPost;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post")
     private List<CommentPost> commentList;
 
     @JsonIgnore

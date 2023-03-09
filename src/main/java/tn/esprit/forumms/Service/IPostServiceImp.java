@@ -55,6 +55,9 @@ public class IPostServiceImp implements IPostService {
         if (similarPost!=null) {
             return similarPost;
         }
+        else if (post.getDescriptionPost()==null||post.getTopicPost()==null){
+            return null;
+        }
         else {
             post.setUserPost(u);
             post.setDateCreationPost(new Date());

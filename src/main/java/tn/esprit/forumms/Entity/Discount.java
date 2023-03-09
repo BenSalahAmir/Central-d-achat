@@ -1,5 +1,6 @@
 package tn.esprit.forumms.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,10 +33,12 @@ public class Discount implements Serializable {
     @Enumerated(EnumType.STRING)
     private DiscountStatus discountStatus;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User usedBy;
 
+    @JsonIgnore
     @OneToOne
     private Cart cart;
 

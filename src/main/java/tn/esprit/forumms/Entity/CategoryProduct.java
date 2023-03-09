@@ -22,7 +22,7 @@ public class CategoryProduct implements Serializable {
     private Long idCategoryProduct;
     private String nameCategoryProduct;
     @JsonIgnore
-    @OneToMany(mappedBy = "categoryProduct")
+    @OneToMany(mappedBy = "categoryProduct",cascade = CascadeType.ALL)
     private List<Product> productListCategory;
 
     @OneToMany(mappedBy = "categoryPost")
@@ -32,3 +32,4 @@ public class CategoryProduct implements Serializable {
     @OneToMany(mappedBy = "category")
     private List<Sous_CategoryProduct> sous_categoryProducts ;
 }
+

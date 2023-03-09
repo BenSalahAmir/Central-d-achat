@@ -33,7 +33,6 @@ public class PostController{
         return ResponseEntity.ok(savedPost);
     }
 
-    @RolesAllowed("admin")
     @GetMapping("getall")
     public List<Post> getAllPosts(){
         return iPostService.getAllPosts();

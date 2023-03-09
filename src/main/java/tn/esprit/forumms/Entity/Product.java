@@ -24,6 +24,7 @@ public class Product implements Serializable {
     private String nameProduct;
     private String referenceProduct;
     //private String imageProduct;
+    @Lob
     private byte[] imageProduct;
     private float discountProduct;
     private String marqueProduct;
@@ -34,31 +35,31 @@ public class Product implements Serializable {
     private CategoryProduct categoryProduct;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product" , cascade = CascadeType.ALL)
     private List<RatingProduct> ratingProductList;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product" , cascade = CascadeType.ALL)
     private List<CartLine> cartLines;
 
+    @JsonIgnore
     @ManyToOne
     private User userProduct;
 
+    @JsonIgnore
     @OneToOne
     private CommentPost comment;
 
-    /*@JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL)
-    /*@JoinTable(
-            name = "FavorisProduct",
-            joinColumns = @JoinColumn(name = "idProduct"),
-            inverseJoinColumns = @JoinColumn(name = "idFavori"))*/
-    //private List<FavoriProduct> favoriProducts;
     @JsonIgnore
     @ManyToOne
     private Sous_CategoryProduct sousCategorie;
 
-    @OneToMany(mappedBy = "product")
+    @JsonIgnore
+    @OneToMany(mappedBy = "product" ,cascade = CascadeType.ALL)
     private List<FavoriProduct> favoriProducts;
+
+    @JsonIgnore
+    @OneToOne
+    private Discount discount;
 
 }

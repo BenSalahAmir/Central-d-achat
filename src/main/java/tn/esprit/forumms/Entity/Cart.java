@@ -35,10 +35,11 @@ public class Cart implements Serializable {
     private User user;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL)
     @Column(name = "cartLine")
     private List<CartLine> cartLines;
 
+    @JsonIgnore
     @OneToOne
     private Discount discount;
 

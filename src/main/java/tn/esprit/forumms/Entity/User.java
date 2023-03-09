@@ -6,10 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.io.Serializable;
 import java.util.List;
-
 @Entity
 @Getter
 @Setter
@@ -17,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 public class User implements Serializable {
     @Id
-   // @GeneratedValue(strategy= GenerationType.IDENTITY)
+    // @GeneratedValue(strategy= GenerationType.IDENTITY)
     private String idUser;
 
     private String firstName;
@@ -52,27 +54,23 @@ public class User implements Serializable {
 
 
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL)
-    /*@JoinTable(
-            name = "FavorisProduct",
-            joinColumns = @JoinColumn(name = "idUser"),
-            inverseJoinColumns = @JoinColumn(name = "idFavori"))*/
-    private List<FavoriProduct> favoris ;
+    @OneToMany(mappedBy = "user")
+    private List<FavoriProduct> favoriProductList;
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "userclaim")
     private List<Claim> claimList;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "userRating")
     private List<RatingProduct> ratingProductList;
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "userProduct")
     private List<Product> productListUser;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "usedBy")
     private List<Discount> discounts ;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Cart> carts ;
 
@@ -83,13 +81,13 @@ public class User implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<DislikeComment> dislikeComments;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "userPost")
     private List<Post>posts;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "userComment")
     List<CommentPost>commentList;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Facture> factureList;
 

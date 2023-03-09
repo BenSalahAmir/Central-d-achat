@@ -43,4 +43,5 @@ public class Delivery implements Serializable {
     @JsonIgnore
     @OneToOne
     private Facture facture;
+
 }
