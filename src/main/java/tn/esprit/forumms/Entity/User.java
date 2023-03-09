@@ -90,6 +90,8 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "userComment")
     List<CommentPost>commentList;
 
+    @OneToMany(mappedBy = "user")
+    private List<Facture> factureList;
 
 
     @ManyToOne

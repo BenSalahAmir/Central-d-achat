@@ -56,14 +56,14 @@ public class IPostServiceImp implements IPostService {
             return similarPost;
         }
         else {
-        post.setUserPost(u);
-        post.setDateCreationPost(new Date());
-        post.setCategoryPost(categoryProduct);
-        if (imageFile != null && !imageFile.isEmpty()) {
-            post.setImagePost(imageFile.getBytes());
-        }
+            post.setUserPost(u);
+            post.setDateCreationPost(new Date());
+            post.setCategoryPost(categoryProduct);
+            if (imageFile != null && !imageFile.isEmpty()) {
+                post.setImagePost(imageFile.getBytes());
+            }
 
-        return postRepository.save(post);
+            return postRepository.save(post);
         }
     }
 

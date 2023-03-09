@@ -159,9 +159,9 @@ public class ICommentPostServiceImp implements ICommentPostService{
         List<CartLine>cartLines = new ArrayList<>();
         int productsSold=0;
         for (Product product:products) {
-                for (CartLine cartLine:product.getCartLines()) {
-                    Objects.requireNonNull(cartLines).add(cartLine);
-                }
+            for (CartLine cartLine:product.getCartLines()) {
+                Objects.requireNonNull(cartLines).add(cartLine);
+            }
         }
 
         for (CartLine cartLine: Objects.requireNonNull(cartLines)) {
@@ -190,6 +190,7 @@ public class ICommentPostServiceImp implements ICommentPostService{
         }
         else return null;
     }
+
 
 
 }

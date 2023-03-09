@@ -17,7 +17,7 @@ public class DislikeController {
         return iServiceDislike.addDislike(dislikeComment,idUser,idComment);
     }
 
-    @PostMapping("/deletedislike/{idDislike}/{idUser}")
+    @DeleteMapping("/deletedislike/{idDislike}/{idUser}")
     public void deleteDislike(@PathVariable Long idDislike,@PathVariable String idUser){
         iServiceDislike.deleteDislike(idDislike,idUser);
     }

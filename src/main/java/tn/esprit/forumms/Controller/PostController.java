@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.forumms.Entity.Post;
 import tn.esprit.forumms.Service.IPostService;
 
+import javax.annotation.security.RolesAllowed;
 import java.io.IOException;
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class PostController{
         return ResponseEntity.ok(savedPost);
     }
 
+    @RolesAllowed("admin")
     @GetMapping("getall")
     public List<Post> getAllPosts(){
         return iPostService.getAllPosts();

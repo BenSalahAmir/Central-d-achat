@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface ICommentPostService {
     public List<CommentPost> getAllComments();
-   // public CommentPost addComment(CommentPost commentPost,Long idUser,Long idPost) ;
-   //public CommentPost editComment(CommentPost commentPost);
 
     CommentPost editComment(CommentPost commentPost, String idUser, Long idPost);
 

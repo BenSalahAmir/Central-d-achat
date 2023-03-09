@@ -39,7 +39,7 @@ public class CommentPostController {
 
     @DeleteMapping("/delete/{idComment}/{idUser}")
     public void deleteComment(@PathVariable Long idComment,@PathVariable String idUser){
-         iCommentPostService.deleteComment(idComment,idUser);
+        iCommentPostService.deleteComment(idComment,idUser);
     }
 
     @PutMapping("/setProduct/{idComment}/{idProduct}")

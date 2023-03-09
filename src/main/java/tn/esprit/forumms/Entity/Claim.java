@@ -2,16 +2,13 @@ package tn.esprit.forumms.Entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
-
+@Builder
 @Entity
 @Getter
 @Setter
@@ -28,6 +25,8 @@ public class Claim implements Serializable {
     private CategoryClaim categoryClaim;
     @Enumerated(EnumType.STRING)
     private StatusClaim statusClaim;
+    private String referencefacture;
+
 
 
 

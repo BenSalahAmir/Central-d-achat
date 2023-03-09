@@ -17,7 +17,6 @@ import javax.transaction.Transactional;
 @Service
 @AllArgsConstructor
 public class IServiceDislikeImp implements IServiceDislike{
-
     public final DislikeRepository dislikeRepository;
     public final UserRepository userRepository;
     public final LikeRepository likeRepository;
