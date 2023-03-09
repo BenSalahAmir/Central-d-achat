@@ -1,0 +1,36 @@
+server:
+  port: 8083
+  
+spring:
+  application:
+    name: API_GATEWAY
+    
+    
+  cloud:
+    gateway:
+      routes:
+      - id: CartService
+        uri:
+          lb://CartService
+        predicates:
+        - Path=/cart/**
+      - id: DeliveryService
+        uri:
+          lb://DeliveryService
+        predicates:
+          - Path=/delivery/**
+      - id: ForumService
+        uri:
+          lb://ForumService
+        predicates:
+          - Path=/forum/**
+      - id: StoreService
+        uri:
+          lb://StoreService
+        predicates:
+          - Path=/store/**
+
+
+        
+        
+          
