@@ -74,40 +74,36 @@ public class ICommentPostServiceImp implements ICommentPostService{
     }
 
     @Override
-    public CommentPost addComment(CommentPost commentPost,String idUser,Long idPost) {
-        User user=userRepository.findById(idUser).orElse(null);
-        Post post=postRepository.findById(idPost).orElse(null);
-        if(user!=null&&post!=null&&commentPost.getDescriptionComment()!=null){
+    public CommentPost addComment(CommentPost commentPost, String idUser, Long idPost) {
+        User user = userRepository.findById(idUser).orElse(null);
+        Post post = postRepository.findById(idPost).orElse(null);
+        if (user != null && post != null && commentPost.getDescriptionComment() != null) {
             String commentTextWithEmoji = convertEmoticonsToEmoji(commentPost.getDescriptionComment());
             commentPost.setDescriptionComment(commentTextWithEmoji);
             List<String> badWords = fetchBadWords();
 
-            boolean containsBadWord = false;
             for (String badWord : badWords) {
                 if (commentPost.getDescriptionComment().toLowerCase().contains(badWord.toLowerCase())) {
-                    containsBadWord = true;
-                    break;
+                    String asterisks = String.join("", Collections.nCopies(badWord.length(), "*"));
+                    commentPost.setDescriptionComment(commentPost.getDescriptionComment().toLowerCase().replace(badWord.toLowerCase(), asterisks));
                 }
             }
 
-            if (containsBadWord) {
-                return null;
-            }
-            else {
-                commentPost.setUserComment(user);
-                commentPost.setPost(post);
-                commentPost.setDateCreationComment(new Date());
-                return commentPostRepository.save(commentPost);
-            }
+            commentPost.setUserComment(user);
+            commentPost.setPost(post);
+            commentPost.setDateCreationComment(new Date());
+            return commentPostRepository.save(commentPost);
+        } else {
+            return null;
         }
-        else return null;
     }
+
 
     @Override
     public CommentPost editComment(CommentPost commentPost, String idUser, Long idComment) {
         User user =userRepository.findById(idUser).orElse(null);
         CommentPost comment =commentPostRepository.findById(idComment).orElse(null);
-        if (comment!=null && comment.getUserComment().equals(user)){
+        if (comment!=null && comment.getUserComment().equals(user)&&commentPost.getDescriptionComment()!=null){
             List<String> badWords = fetchBadWords();
             String text = commentPost.getDescriptionComment();
             for (String word : badWords) {
@@ -156,13 +152,11 @@ public class ICommentPostServiceImp implements ICommentPostService{
     public int getnbrproduitVendus(String idUser){
         User user=userRepository.findById(idUser).orElse(null);
         List<Product>products=user.getProductListUser();
-        List<CartLine>cartLines = new ArrayList<>();
         int productsSold=0;
-        for (Product product:products) {
-            for (CartLine cartLine:product.getCartLines()) {
-                Objects.requireNonNull(cartLines).add(cartLine);
-            }
-        }
+        List<CartLine> cartLines = products.stream()
+                .flatMap(product -> Optional.ofNullable(product.getCartLines())
+                        .orElse(Collections.emptyList()).stream())
+                .collect(Collectors.toList());
 
         for (CartLine cartLine: Objects.requireNonNull(cartLines)) {
             if (cartLine.getCart().getCartStatus().equals(CartStatus.CONFIRMED)){

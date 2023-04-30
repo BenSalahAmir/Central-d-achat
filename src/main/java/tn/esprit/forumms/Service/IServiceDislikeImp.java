@@ -3,6 +3,7 @@ package tn.esprit.forumms.Service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import tn.esprit.forumms.Entity.CommentPost;
 import tn.esprit.forumms.Entity.DislikeComment;
 import tn.esprit.forumms.Entity.LikeComment;
@@ -23,46 +24,43 @@ public class IServiceDislikeImp implements IServiceDislike{
     public final CommentPostRepository commentPostRepository;
     @Transactional
     @Override
-    public DislikeComment addDislike(DislikeComment dislikeComment,String idUser,Long idComment) {
-        User user=userRepository.findById(idUser).orElse(null);
-        CommentPost commentPost=commentPostRepository.findById(idComment).orElse(null);
-        LikeComment likeComment=likeRepository.getLikeCommentByUserAndCommentPost(user,commentPost);
-        DislikeComment disliketest=dislikeRepository.getDislikeCommentByUserAndCommentPost(user,commentPost);
+    public DislikeComment addDislike(DislikeComment dislikeComment, String idUser, Long idComment) {
+        User user = userRepository.findById(idUser).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+        CommentPost commentPost = commentPostRepository.findById(idComment).orElseThrow(() -> new IllegalArgumentException("Invalid comment ID"));
+        LikeComment likeComment = likeRepository.getLikeCommentByUserAndCommentPost(user, commentPost);
+        DislikeComment disliketest = dislikeRepository.getDislikeCommentByUserAndCommentPost(user, commentPost);
+        Assert.notNull(commentPost, "Comment post must not be null");
 
-        if (commentPost!=null&&user!=null){
-            if (disliketest!=null) {
-                return null;
+        if (disliketest != null) {
+            dislikeRepository.deleteById(disliketest.getIdDislike());
+            commentPost.setNbDisliked(commentPost.getNbDisliked()-1);
+            return null;
+        } else if (likeComment == null) {
+            dislikeComment.setCommentPost(commentPost);
+            dislikeComment.setUser(user);
+            if (commentPost.getNbDisliked() == null) {
+                commentPost.setNbDisliked(1L);
+                return dislikeRepository.save(dislikeComment);
+            } else {
+                commentPost.setNbDisliked(commentPost.getNbDisliked() + 1);
+                return dislikeRepository.save(dislikeComment);
             }
-            else if (likeComment==null){
-                dislikeComment.setCommentPost(commentPost);
-                dislikeComment.setUser(user);
-                if (commentPost.getNbDisliked()==null){
-                    commentPost.setNbDisliked(1L);
-                    return dislikeRepository.save(dislikeComment);
-                }
-                else
-                {
-                    commentPost.setNbLiked(commentPost.getNbDisliked()+1);
-                    return dislikeRepository.save(dislikeComment);
-                }
-            }  else{
-                dislikeComment.setCommentPost(commentPost);
-                dislikeComment.setUser(user);
-                if (commentPost.getNbDisliked()==null){
-                    commentPost.setNbDisliked(1L);
-                    commentPost.setNbLiked(commentPost.getNbLiked()-1);
-                    return dislikeRepository.save(dislikeComment);
-                }
-                else {
-                    commentPost.setNbDisliked(commentPost.getNbDisliked()+1);
-                    commentPost.setNbLiked(commentPost.getNbLiked()-1);
-                    likeRepository.deleteById(likeComment.getIdLike());
-                    return dislikeRepository.save(dislikeComment);
-                }
+        } else {
+            dislikeComment.setCommentPost(commentPost);
+            dislikeComment.setUser(user);
+            if (commentPost.getNbDisliked() == null) {
+                commentPost.setNbDisliked(1L);
+                commentPost.setNbLiked(commentPost.getNbLiked() - 1);
+                return dislikeRepository.save(dislikeComment);
+            } else {
+                commentPost.setNbDisliked(commentPost.getNbDisliked() + 1);
+                commentPost.setNbLiked(commentPost.getNbLiked() - 1);
+                likeRepository.deleteById(likeComment.getIdLike());
+                return dislikeRepository.save(dislikeComment);
             }
         }
-        else return null;
     }
+
 
     @Transactional
     @Override

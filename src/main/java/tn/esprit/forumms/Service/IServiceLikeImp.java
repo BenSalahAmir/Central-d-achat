@@ -2,6 +2,7 @@ package tn.esprit.forumms.Service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import tn.esprit.forumms.Entity.CommentPost;
 import tn.esprit.forumms.Entity.DislikeComment;
 import tn.esprit.forumms.Entity.LikeComment;
@@ -25,45 +26,42 @@ public class IServiceLikeImp implements IServiceLike{
     @Transactional
     @Override
     public LikeComment addLike(LikeComment likeComment, String idUser, Long idComment) {
-        User user=userRepository.findById(idUser).orElse(null);
-        CommentPost commentPost=commentPostRepository.findById(idComment).orElse(null);
-        DislikeComment dislikeComment=dislikeRepository.getDislikeCommentByUserAndCommentPost(user,commentPost);
-        LikeComment liketest=likeRepository.getLikeCommentByUserAndCommentPost(user,commentPost);
+        User user = userRepository.findById(idUser).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+        CommentPost commentPost = commentPostRepository.findById(idComment).orElseThrow(() -> new IllegalArgumentException("Invalid comment ID"));
+        DislikeComment dislikeComment = dislikeRepository.getDislikeCommentByUserAndCommentPost(user, commentPost);
+        LikeComment liketest = likeRepository.getLikeCommentByUserAndCommentPost(user, commentPost);
+        Assert.notNull(commentPost, "Comment post must not be null");
 
-        if (commentPost!=null&&user!=null){
-            if (liketest!=null) {
-                return null;
+        if (liketest != null) {
+            likeRepository.deleteById(liketest.getIdLike());
+            commentPost.setNbLiked(commentPost.getNbLiked()-1);
+            return null;
+        } else if (dislikeComment == null) {
+            likeComment.setCommentPost(commentPost);
+            likeComment.setUser(user);
+            if (commentPost.getNbLiked() == null) {
+                commentPost.setNbLiked(1L);
+                return likeRepository.save(likeComment);
+            } else {
+                commentPost.setNbLiked(commentPost.getNbLiked() + 1);
+                return likeRepository.save(likeComment);
             }
-            else if (dislikeComment==null){
-                likeComment.setCommentPost(commentPost);
-                likeComment.setUser(user);
-                if (commentPost.getNbLiked()==null){
-                    commentPost.setNbLiked(1L);
-                    return likeRepository.save(likeComment);
-                }
-                else
-                {
-                    commentPost.setNbDisliked(commentPost.getNbLiked()+1);
-                    return likeRepository.save(likeComment);
-                }
-            }  else{
-                likeComment.setCommentPost(commentPost);
-                likeComment.setUser(user);
-                if (commentPost.getNbLiked()==null){
-                    commentPost.setNbLiked(1L);
-                    commentPost.setNbDisliked(commentPost.getNbDisliked()-1);
-                    return likeRepository.save(likeComment);
-                }
-                else {
-                    commentPost.setNbLiked(commentPost.getNbLiked()+1);
-                    commentPost.setNbDisliked(commentPost.getNbDisliked()-1);
-                    dislikeRepository.deleteById(dislikeComment.getIdDislike());
-                    return likeRepository.save(likeComment);
-                }
+        } else {
+            likeComment.setCommentPost(commentPost);
+            likeComment.setUser(user);
+            if (commentPost.getNbLiked() == null) {
+                commentPost.setNbLiked(1L);
+                commentPost.setNbDisliked(commentPost.getNbDisliked() - 1);
+                return likeRepository.save(likeComment);
+            } else {
+                commentPost.setNbLiked(commentPost.getNbLiked() + 1);
+                commentPost.setNbDisliked(commentPost.getNbDisliked() - 1);
+                dislikeRepository.deleteById(dislikeComment.getIdDislike());
+                return likeRepository.save(likeComment);
             }
         }
-        else return null;
     }
+
     @Transactional
     @Override
     public void Deletelike(Long idLike,String idUser) {

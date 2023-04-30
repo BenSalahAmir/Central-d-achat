@@ -70,6 +70,11 @@ public class IPostServiceImp implements IPostService {
         }
     }
 
+    @Override
+    public Post addPost2(Post post, String idUser, Long idCategory, MultipartFile imageFile) throws IOException {
+        return null;
+    }
+
 
     @Override
     public Post editPost(Post post, Long idPost, String idUser) {

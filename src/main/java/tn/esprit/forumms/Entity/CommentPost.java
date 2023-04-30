@@ -1,6 +1,7 @@
 package tn.esprit.forumms.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,7 +29,7 @@ public class CommentPost implements Serializable {
     @ManyToOne
     private Post post;
 
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {"commentList"})
     @ManyToOne
     private User userComment;
 
