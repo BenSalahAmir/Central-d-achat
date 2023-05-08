@@ -31,7 +31,7 @@ public class Post implements Serializable {
     private CategoryProduct categoryPost;
 
     @JsonIgnoreProperties(value = {"post"})
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post",cascade = CascadeType.REMOVE)
     private List<CommentPost> commentList;
 
     @JsonIgnoreProperties(value = {"posts"})

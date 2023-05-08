@@ -10,6 +10,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/forum/comment")
+@CrossOrigin(origins = "http://localhost:4200")
 public class CommentPostController {
     public final ICommentPostService iCommentPostService;
 
@@ -28,9 +29,9 @@ public class CommentPostController {
         return iCommentPostService.addComment(c,idUser,idPost);
     }
 
-    @PutMapping("/edit/{idUser}/{idPost}")
-    public CommentPost editComment(@RequestBody CommentPost c, @PathVariable String idUser,@PathVariable Long idPost){
-        return iCommentPostService.editComment(c,idUser,idPost);
+    @PutMapping("/edit/{idUser}/{idComment}")
+    public CommentPost editComment(@RequestBody CommentPost c, @PathVariable String idUser,@PathVariable Long idComment){
+        return iCommentPostService.editComment(c,idUser,idComment);
     }
     @GetMapping("/getById/{idComment}")
     public CommentPost getCommById(@PathVariable Long idComment){

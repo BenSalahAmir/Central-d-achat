@@ -76,7 +76,11 @@ public class ICommentPostServiceImp implements ICommentPostService{
     @Override
     public CommentPost addComment(CommentPost commentPost, String idUser, Long idPost) {
         User user = userRepository.findById(idUser).orElse(null);
+        System.out.println("id user "+idUser);
         Post post = postRepository.findById(idPost).orElse(null);
+        System.out.println("this my idpost "+ idPost);
+
+
         if (user != null && post != null && commentPost.getDescriptionComment() != null) {
             String commentTextWithEmoji = convertEmoticonsToEmoji(commentPost.getDescriptionComment());
             commentPost.setDescriptionComment(commentTextWithEmoji);
@@ -92,7 +96,10 @@ public class ICommentPostServiceImp implements ICommentPostService{
             commentPost.setUserComment(user);
             commentPost.setPost(post);
             commentPost.setDateCreationComment(new Date());
+            System.out.println("this my comment "+ commentPost);
+
             return commentPostRepository.save(commentPost);
+
         } else {
             return null;
         }

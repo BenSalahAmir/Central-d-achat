@@ -7,6 +7,7 @@ import tn.esprit.forumms.Service.IServiceLike;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/forum/like")
+@CrossOrigin(origins = "http://localhost:4200")
 public class LikeController {
 
     public final IServiceLike iServiceLike;

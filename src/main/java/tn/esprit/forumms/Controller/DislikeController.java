@@ -8,6 +8,7 @@ import tn.esprit.forumms.Service.IServiceDislike;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/forum/dislike")
+@CrossOrigin(origins = "http://localhost:4200")
 public class DislikeController {
 
     public final IServiceDislike iServiceDislike;
